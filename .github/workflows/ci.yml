@@ -1,0 +1,109 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test (Swift ${{ matrix.swift-version }})
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        swift-version:
+          - "6.0.3"
+          - "6.1.3"
+          - "6.2.4"
+          - "6.3.1"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Swift
+        uses: swift-actions/setup-swift@v3
+        with:
+          swift-version: "${{ matrix.swift-version }}"
+
+      - name: Show Swift version
+        run: swift --version
+
+      - name: Run tests
+        run: swift test
+
+  integration-test:
+    name: Integration Tests
+    runs-on: macos-latest
+    needs: test
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    env:
+      EXOSCALE_API_KEY: ${{ secrets.EXOSCALE_API_KEY }}
+      EXOSCALE_API_SECRET: ${{ secrets.EXOSCALE_API_SECRET }}
+      EXOSCALE_ZONE: ${{ vars.EXOSCALE_ZONE }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Swift
+        uses: swift-actions/setup-swift@v3
+        with:
+          swift-version: "6.3.1"
+
+      - name: Show Swift version
+        run: swift --version
+
+      - name: Run integration tests
+        run: |
+          if [ -z "$EXOSCALE_API_KEY" ]; then
+            echo "EXOSCALE_API_KEY secret is required."
+            exit 1
+          fi
+
+          if [ -z "$EXOSCALE_API_SECRET" ]; then
+            echo "EXOSCALE_API_SECRET secret is required."
+            exit 1
+          fi
+
+          if [ -n "$EXOSCALE_ZONE" ]; then
+            export EXOSCALE_ZONE
+          else
+            unset EXOSCALE_ZONE
+          fi
+
+          EXOSCALE_INTEGRATION_TESTS=1 swift test --filter IntegrationTests
+
+  format:
+    name: Format
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install SwiftFormat
+        run: brew install swiftformat
+
+      - name: Check formatting
+        run: swiftformat --lint --config .swiftformat Sources Tests Package.swift
+
+  lint:
+    name: Lint
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install SwiftLint
+        run: brew install swiftlint
+
+      - name: Run SwiftLint
+        run: swiftlint lint --config .swiftlint.yml

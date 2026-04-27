@@ -1,0 +1,7 @@
+--swiftversion 6.0
+--indent 4
+--linebreaks lf
+--semicolons never
+--exclude .build
+--disable all
+--enable consecutiveBlankLines,consecutiveSpaces,linebreakAtEndOfFile,linebreaks,semicolons,trailingSpace

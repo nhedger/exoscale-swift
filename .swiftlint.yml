@@ -1,0 +1,25 @@
+included:
+  - Sources
+  - Tests
+  - Package.swift
+
+excluded:
+  - .build
+
+disabled_rules:
+  - cyclomatic_complexity
+  - file_length
+  - function_body_length
+  - function_parameter_count
+  - identifier_name
+  - inclusive_language
+  - large_tuple
+  - line_length
+  - nesting
+  - opening_brace
+  - trailing_comma
+  - type_body_length
+  - type_name
+  - unneeded_synthesized_initializer
+
+reporter: github-actions-logging
