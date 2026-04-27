@@ -1,4 +1,4 @@
-# Exoscale SDK for Swift
+![](.github/banner.png)
 
 ![Version](https://img.shields.io/github/v/release/nhedger/exoscale-swift)
 [![License](https://img.shields.io/github/license/nhedger/exoscale-swift?style=flat-square)](https://opensource.org/licenses/MIT)
