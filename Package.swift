@@ -29,9 +29,5 @@ let package = Package(
             name: "ExoscaleTests",
             dependencies: ["Exoscale"]
         ),
-        .testTarget(
-            name: "ExoscaleIntegrationTests",
-            dependencies: ["Exoscale"]
-        ),
     ]
 )
