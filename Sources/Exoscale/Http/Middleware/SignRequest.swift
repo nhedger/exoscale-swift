@@ -51,14 +51,7 @@ struct SignRequest: RequestInterceptor, Sendable {
     }
 
     func adapt(_ urlRequest: URLRequest) throws -> URLRequest {
-        guard let url = urlRequest.url else {
-            throw ExoscaleError.invalidRequestURL
-        }
-
-        guard urlRequest.httpBodyStream == nil || urlRequest.httpBody != nil else {
-            throw ExoscaleError.unsupportedBodyStream
-        }
-
+        let url = urlRequest.url!
         let expires = Int(now().addingTimeInterval(expirationInterval).timeIntervalSince1970)
         let signedQueryArguments = Self.signedQueryArguments(for: url)
         let signature = signature(

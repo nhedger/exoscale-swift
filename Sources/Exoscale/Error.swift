@@ -1,15 +1,17 @@
 import Foundation
 
-public enum ExoscaleError: Error, Equatable, LocalizedError {
-    case invalidRequestURL
-    case unsupportedBodyStream
+extension Exoscale {
+    public enum ApiError: Swift.Error, Equatable, LocalizedError {
+        case unauthorized
+        case forbidden
 
-    public var errorDescription: String? {
-        switch self {
-        case .invalidRequestURL:
-            "The request is missing a valid URL."
-        case .unsupportedBodyStream:
-            "Exoscale signing requires URLRequest.httpBody data and does not support streamed request bodies."
+        public var errorDescription: String? {
+            switch self {
+            case .unauthorized:
+                "The request is missing valid authorization credentials."
+            case .forbidden:
+                "The request is forbidden for the provided credentials."
+            }
         }
     }
 }

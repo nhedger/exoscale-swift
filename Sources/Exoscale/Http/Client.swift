@@ -45,11 +45,31 @@ extension Http {
                 headers: headers
             )
 
-            return try await session
-                .request(request)
-                .validate()
-                .serializingData()
-                .value
+            do {
+                return try await session
+                    .request(request)
+                    .validate()
+                    .serializingData()
+                    .value
+            } catch let error as AFError {
+                if let responseCode = error.responseCode,
+                   let exoscaleError = Self.error(forResponseStatusCode: responseCode) {
+                    throw exoscaleError
+                }
+
+                throw error
+            }
+        }
+
+        static func error(forResponseStatusCode statusCode: Int) -> Exoscale.ApiError? {
+            switch statusCode {
+            case 401:
+                .unauthorized
+            case 403:
+                .forbidden
+            default:
+                nil
+            }
         }
 
         private func decode<Response: Decodable>(
@@ -149,17 +169,13 @@ extension Http {
                         partialURL.appendingPathComponent(pathComponent)
                     },
                 resolvingAgainstBaseURL: false
-            )
+            )!
 
-            components?.queryItems = query
+            components.queryItems = query
                 .map { URLQueryItem(name: $0.key, value: $0.value) }
                 .sorted { $0.name < $1.name }
 
-            guard let url = components?.url else {
-                throw ExoscaleError.invalidRequestURL
-            }
-
-            var request = URLRequest(url: url)
+            var request = URLRequest(url: components.url!)
             request.httpMethod = method
             request.httpBody = body
 

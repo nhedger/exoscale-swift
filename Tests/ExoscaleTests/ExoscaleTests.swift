@@ -96,3 +96,10 @@ func clientBuildsRequestsFromZoneEndpoint() throws {
     #expect(request.httpMethod == "GET")
     #expect(request.value(forHTTPHeaderField: "Accept") == "application/json")
 }
+
+@Test("Client maps authorization response status codes")
+func clientMapsAuthorizationResponseStatusCodes() {
+    #expect(Http.Client.error(forResponseStatusCode: 401) == Exoscale.ApiError.unauthorized)
+    #expect(Http.Client.error(forResponseStatusCode: 403) == Exoscale.ApiError.forbidden)
+    #expect(Http.Client.error(forResponseStatusCode: 404) == nil)
+}
