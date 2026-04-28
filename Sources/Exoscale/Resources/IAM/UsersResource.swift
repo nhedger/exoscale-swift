@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to organization user API operations.
-public struct UsersResource {
+public struct UsersResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

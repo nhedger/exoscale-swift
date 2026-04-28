@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to IAM role API operations.
-public struct RolesResource {
+public struct RolesResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

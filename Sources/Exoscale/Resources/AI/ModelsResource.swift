@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to AI model API operations.
-public struct ModelsResource {
+public struct ModelsResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

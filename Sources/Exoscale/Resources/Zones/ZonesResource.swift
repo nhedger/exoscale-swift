@@ -1,5 +1,5 @@
 /// Access to zone-related API operations.
-public struct ZonesResource {
+public struct ZonesResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

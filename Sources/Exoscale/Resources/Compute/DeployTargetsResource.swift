@@ -1,5 +1,5 @@
 /// Access to Deploy Target API operations.
-public struct DeployTargetsResource {
+public struct DeployTargetsResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

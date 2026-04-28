@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to DBaaS PostgreSQL API operations.
-public struct DBaaSPostgreSQLResource {
+public struct DBaaSPostgreSQLResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

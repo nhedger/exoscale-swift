@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to IAM organization policy API operations.
-public struct OrganizationPolicyResource {
+public struct OrganizationPolicyResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

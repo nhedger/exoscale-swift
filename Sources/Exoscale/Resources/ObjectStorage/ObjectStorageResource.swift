@@ -1,5 +1,5 @@
 /// Access to object storage API operations.
-public struct ObjectStorageResource {
+public struct ObjectStorageResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

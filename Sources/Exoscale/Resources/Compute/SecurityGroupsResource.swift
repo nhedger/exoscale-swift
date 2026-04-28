@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to Security Group API operations.
-public struct SecurityGroupsResource {
+public struct SecurityGroupsResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

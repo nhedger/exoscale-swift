@@ -1,5 +1,5 @@
 /// Access to organization API operations.
-public struct OrganizationResource {
+public struct OrganizationResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

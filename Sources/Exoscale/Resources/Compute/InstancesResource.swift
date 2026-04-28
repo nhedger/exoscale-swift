@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to compute instance API operations.
-public struct InstancesResource {
+public struct InstancesResource: Sendable {
     public enum Field: String, Sendable {
         case labels
     }

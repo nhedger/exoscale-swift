@@ -1,5 +1,5 @@
 /// Access to quota API operations.
-public struct QuotasResource {
+public struct QuotasResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

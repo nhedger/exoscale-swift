@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to AI deployment API operations.
-public struct DeploymentsResource {
+public struct DeploymentsResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

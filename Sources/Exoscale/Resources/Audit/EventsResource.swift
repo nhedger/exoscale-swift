@@ -1,5 +1,5 @@
 /// Access to event API operations.
-public struct EventsResource {
+public struct EventsResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

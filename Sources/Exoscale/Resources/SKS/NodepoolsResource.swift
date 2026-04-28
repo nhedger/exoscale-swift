@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to SKS nodepool API operations.
-public struct NodepoolsResource {
+public struct NodepoolsResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

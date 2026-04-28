@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to Instance Pool API operations.
-public struct InstancePoolsResource {
+public struct InstancePoolsResource: Sendable {
     public enum Field: String, Sendable {
         case antiAffinityGroups = "anti-affinity-groups"
         case description

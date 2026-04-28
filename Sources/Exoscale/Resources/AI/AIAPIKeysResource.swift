@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to AI API key operations.
-public struct AIAPIKeysResource {
+public struct AIAPIKeysResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

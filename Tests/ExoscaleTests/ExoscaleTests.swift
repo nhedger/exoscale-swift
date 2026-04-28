@@ -2,6 +2,17 @@ import Foundation
 import Testing
 @testable import Exoscale
 
+private func requireSendable<T: Sendable>(_ value: T) {
+    _ = value
+}
+
+@Test("Exoscale client is Sendable")
+func exoscaleClientIsSendable() throws {
+    let client = try Exoscale(apiKey: "key", apiSecret: "secret")
+
+    requireSendable(client)
+}
+
 @Test("Interceptor matches the documented signing format")
 func interceptorSignsDocumentedExample() throws {
     let interceptor = SignRequest(

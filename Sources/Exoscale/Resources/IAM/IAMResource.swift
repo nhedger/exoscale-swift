@@ -1,20 +1,24 @@
 /// Access to IAM API operations.
-public final class IAMResource {
+public final class IAMResource: Sendable {
     let http: Http.Client
 
     /// Access to IAM API key operations.
-    public lazy var apiKeys = APIKeysResource(http: http)
+    public let apiKeys: APIKeysResource
 
     /// Access to IAM organization policy API operations.
-    public lazy var organizationPolicy = OrganizationPolicyResource(http: http)
+    public let organizationPolicy: OrganizationPolicyResource
 
     /// Access to IAM role API operations.
-    public lazy var roles = RolesResource(http: http)
+    public let roles: RolesResource
 
     /// Access to organization user API operations.
-    public lazy var users = UsersResource(http: http)
+    public let users: UsersResource
 
     init(http: Http.Client) {
         self.http = http
+        self.apiKeys = APIKeysResource(http: http)
+        self.organizationPolicy = OrganizationPolicyResource(http: http)
+        self.roles = RolesResource(http: http)
+        self.users = UsersResource(http: http)
     }
 }

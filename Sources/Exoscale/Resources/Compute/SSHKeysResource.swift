@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to SSH key API operations.
-public struct SSHKeysResource {
+public struct SSHKeysResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

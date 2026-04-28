@@ -1,5 +1,5 @@
 /// Access to SKS nodepool template API operations.
-public struct NodepoolTemplatesResource {
+public struct NodepoolTemplatesResource: Sendable {
     public enum Variant: String, Sendable {
         case standard
         case nvidia

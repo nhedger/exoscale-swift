@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to anti-affinity group API operations.
-public struct AntiAffinityGroupsResource {
+public struct AntiAffinityGroupsResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to KMS crypto API operations.
-public struct CryptoResource {
+public struct CryptoResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

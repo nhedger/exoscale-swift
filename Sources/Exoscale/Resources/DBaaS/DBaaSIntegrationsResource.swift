@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to DBaaS service integration API operations.
-public struct DBaaSIntegrationsResource {
+public struct DBaaSIntegrationsResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

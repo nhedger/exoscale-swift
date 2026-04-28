@@ -1,14 +1,16 @@
 /// Access to DNS API operations.
-public final class DNSResource {
+public final class DNSResource: Sendable {
     let http: Http.Client
 
     /// Access to DNS domain API operations.
-    public lazy var domains = DomainsResource(http: http)
+    public let domains: DomainsResource
 
     /// Access to DNS record API operations.
-    public lazy var records = RecordsResource(http: http)
+    public let records: RecordsResource
 
     init(http: Http.Client) {
         self.http = http
+        self.domains = DomainsResource(http: http)
+        self.records = RecordsResource(http: http)
     }
 }

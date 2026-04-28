@@ -1,5 +1,5 @@
 /// Access to compute instance type API operations.
-public struct InstanceTypesResource {
+public struct InstanceTypesResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

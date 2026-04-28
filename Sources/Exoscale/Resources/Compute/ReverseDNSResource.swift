@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to reverse DNS API operations.
-public struct ReverseDNSResource {
+public struct ReverseDNSResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

@@ -1,41 +1,51 @@
 import Foundation
 
 /// Access to DBaaS API operations.
-public final class DBaaSResource {
+public final class DBaaSResource: Sendable {
     let http: Http.Client
 
     /// Access to DBaaS external endpoint API operations.
-    public lazy var externalEndpoints = DBaaSExternalEndpointsResource(http: http)
+    public let externalEndpoints: DBaaSExternalEndpointsResource
 
     /// Access to DBaaS external integration API operations.
-    public lazy var externalIntegrations = DBaaSExternalIntegrationsResource(http: http)
+    public let externalIntegrations: DBaaSExternalIntegrationsResource
 
     /// Access to DBaaS Grafana API operations.
-    public lazy var grafana = DBaaSGrafanaResource(http: http)
+    public let grafana: DBaaSGrafanaResource
 
     /// Access to DBaaS service integration API operations.
-    public lazy var integrations = DBaaSIntegrationsResource(http: http)
+    public let integrations: DBaaSIntegrationsResource
 
     /// Access to DBaaS Kafka API operations.
-    public lazy var kafka = DBaaSKafkaResource(http: http)
+    public let kafka: DBaaSKafkaResource
 
     /// Access to DBaaS MySQL API operations.
-    public lazy var mysql = DBaaSMySQLResource(http: http)
+    public let mysql: DBaaSMySQLResource
 
     /// Access to DBaaS OpenSearch API operations.
-    public lazy var opensearch = DBaaSOpenSearchResource(http: http)
+    public let opensearch: DBaaSOpenSearchResource
 
     /// Access to DBaaS PostgreSQL API operations.
-    public lazy var postgresql = DBaaSPostgreSQLResource(http: http)
+    public let postgresql: DBaaSPostgreSQLResource
 
     /// Access to DBaaS Thanos API operations.
-    public lazy var thanos = DBaaSThanosResource(http: http)
+    public let thanos: DBaaSThanosResource
 
     /// Access to DBaaS Valkey API operations.
-    public lazy var valkey = DBaaSValkeyResource(http: http)
+    public let valkey: DBaaSValkeyResource
 
     init(http: Http.Client) {
         self.http = http
+        self.externalEndpoints = DBaaSExternalEndpointsResource(http: http)
+        self.externalIntegrations = DBaaSExternalIntegrationsResource(http: http)
+        self.grafana = DBaaSGrafanaResource(http: http)
+        self.integrations = DBaaSIntegrationsResource(http: http)
+        self.kafka = DBaaSKafkaResource(http: http)
+        self.mysql = DBaaSMySQLResource(http: http)
+        self.opensearch = DBaaSOpenSearchResource(http: http)
+        self.postgresql = DBaaSPostgreSQLResource(http: http)
+        self.thanos = DBaaSThanosResource(http: http)
+        self.valkey = DBaaSValkeyResource(http: http)
     }
 
     /// Retrieves the DBaaS CA certificate.

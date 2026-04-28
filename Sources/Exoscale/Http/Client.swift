@@ -4,7 +4,7 @@ import Foundation
 enum Http {}
 
 extension Http {
-    final class Client {
+    final class Client: Sendable {
         let baseURL: URL
         let userAgent: String?
 

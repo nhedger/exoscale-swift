@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to IAM API key operations.
-public struct APIKeysResource {
+public struct APIKeysResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

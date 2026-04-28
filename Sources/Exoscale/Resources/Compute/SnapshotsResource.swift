@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to snapshot API operations.
-public struct SnapshotsResource {
+public struct SnapshotsResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

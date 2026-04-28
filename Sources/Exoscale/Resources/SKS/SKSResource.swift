@@ -1,17 +1,20 @@
 /// Access to SKS API operations.
-public final class SKSResource {
+public final class SKSResource: Sendable {
     let http: Http.Client
 
     /// Access to SKS cluster API operations.
-    public lazy var clusters = ClustersResource(http: http)
+    public let clusters: ClustersResource
 
     /// Access to SKS nodepool API operations.
-    public lazy var nodepools = NodepoolsResource(http: http)
+    public let nodepools: NodepoolsResource
 
     /// Access to SKS nodepool template API operations.
-    public lazy var nodepoolTemplates = NodepoolTemplatesResource(http: http)
+    public let nodepoolTemplates: NodepoolTemplatesResource
 
     init(http: Http.Client) {
         self.http = http
+        self.clusters = ClustersResource(http: http)
+        self.nodepools = NodepoolsResource(http: http)
+        self.nodepoolTemplates = NodepoolTemplatesResource(http: http)
     }
 }

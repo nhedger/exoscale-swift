@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to KMS key API operations.
-public struct KMSKeysResource {
+public struct KMSKeysResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

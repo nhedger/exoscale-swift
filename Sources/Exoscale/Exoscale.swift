@@ -1,55 +1,71 @@
 import Foundation
 
-public final class Exoscale {
+public final class Exoscale: Sendable {
     public let config: Exoscale.Config
 
     let http: Http.Client
 
     /// Access to AI API operations.
-    public lazy var ai = AIResource(http: http)
+    public let ai: AIResource
 
     /// Access to audit API operations.
-    public lazy var audit = AuditResource(http: http)
+    public let audit: AuditResource
 
     /// Access to block storage API operations.
-    public lazy var blockStorage = BlockStorageResource(http: http)
+    public let blockStorage: BlockStorageResource
 
     /// Access to compute API operations.
-    public lazy var compute = ComputeResource(http: http)
+    public let compute: ComputeResource
 
     /// Access to DBaaS API operations.
-    public lazy var dbaas = DBaaSResource(http: http)
+    public let dbaas: DBaaSResource
 
     /// Access to DNS API operations.
-    public lazy var dns = DNSResource(http: http)
+    public let dns: DNSResource
 
     /// Access to IAM API operations.
-    public lazy var iam = IAMResource(http: http)
+    public let iam: IAMResource
 
     /// Access to KMS API operations.
-    public lazy var kms = KMSResource(http: http)
+    public let kms: KMSResource
 
     /// Access to object storage API operations.
-    public lazy var objectStorage = ObjectStorageResource(http: http)
+    public let objectStorage: ObjectStorageResource
 
     /// Access to operation API operations.
-    public lazy var operations = OperationsResource(http: http)
+    public let operations: OperationsResource
 
     /// Access to organization API operations.
-    public lazy var organization = OrganizationResource(http: http)
+    public let organization: OrganizationResource
 
     /// Access to quota API operations.
-    public lazy var quotas = QuotasResource(http: http)
+    public let quotas: QuotasResource
 
     /// Access to SKS API operations.
-    public lazy var sks = SKSResource(http: http)
+    public let sks: SKSResource
 
     /// Access to zone-related API operations.
-    public lazy var zones = ZonesResource(http: http)
+    public let zones: ZonesResource
 
     init(config: Exoscale.Config) {
+        let http = Http.Client(config: config)
+
         self.config = config
-        self.http = Http.Client(config: config)
+        self.http = http
+        self.ai = AIResource(http: http)
+        self.audit = AuditResource(http: http)
+        self.blockStorage = BlockStorageResource(http: http)
+        self.compute = ComputeResource(http: http)
+        self.dbaas = DBaaSResource(http: http)
+        self.dns = DNSResource(http: http)
+        self.iam = IAMResource(http: http)
+        self.kms = KMSResource(http: http)
+        self.objectStorage = ObjectStorageResource(http: http)
+        self.operations = OperationsResource(http: http)
+        self.organization = OrganizationResource(http: http)
+        self.quotas = QuotasResource(http: http)
+        self.sks = SKSResource(http: http)
+        self.zones = ZonesResource(http: http)
     }
 }
 

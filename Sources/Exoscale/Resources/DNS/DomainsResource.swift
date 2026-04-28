@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to DNS domain API operations.
-public struct DomainsResource {
+public struct DomainsResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

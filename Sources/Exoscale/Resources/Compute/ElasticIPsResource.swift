@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to Elastic IP API operations.
-public struct ElasticIPsResource {
+public struct ElasticIPsResource: Sendable {
     public enum Field: String, Sendable {
         case description
     }

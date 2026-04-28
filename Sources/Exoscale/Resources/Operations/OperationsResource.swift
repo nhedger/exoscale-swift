@@ -1,5 +1,5 @@
 /// Access to operation API operations.
-public struct OperationsResource {
+public struct OperationsResource: Sendable {
     let http: Http.Client
 
     public enum WaitError: Error, CustomStringConvertible {

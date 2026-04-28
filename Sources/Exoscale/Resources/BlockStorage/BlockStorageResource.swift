@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to block storage API operations.
-public struct BlockStorageResource {
+public struct BlockStorageResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

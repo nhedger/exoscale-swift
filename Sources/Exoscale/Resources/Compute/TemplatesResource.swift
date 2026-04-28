@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to template API operations.
-public struct TemplatesResource {
+public struct TemplatesResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

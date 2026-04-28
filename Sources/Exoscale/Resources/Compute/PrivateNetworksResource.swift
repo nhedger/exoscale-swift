@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to Private Network API operations.
-public struct PrivateNetworksResource {
+public struct PrivateNetworksResource: Sendable {
     public enum Field: String, Sendable {
         case labels
     }

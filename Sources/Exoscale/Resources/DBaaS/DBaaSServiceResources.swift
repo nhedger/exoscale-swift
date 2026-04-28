@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to DBaaS Grafana API operations.
-public struct DBaaSGrafanaResource {
+public struct DBaaSGrafanaResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {
@@ -93,7 +93,7 @@ public struct DBaaSGrafanaResource {
 }
 
 /// Access to DBaaS Kafka API operations.
-public struct DBaaSKafkaResource {
+public struct DBaaSKafkaResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {
@@ -264,7 +264,7 @@ public struct DBaaSKafkaResource {
 }
 
 /// Access to DBaaS MySQL API operations.
-public struct DBaaSMySQLResource {
+public struct DBaaSMySQLResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {
@@ -421,7 +421,7 @@ public struct DBaaSMySQLResource {
 }
 
 /// Access to DBaaS OpenSearch API operations.
-public struct DBaaSOpenSearchResource {
+public struct DBaaSOpenSearchResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {
@@ -561,7 +561,7 @@ public struct DBaaSOpenSearchResource {
 }
 
 /// Access to DBaaS Thanos API operations.
-public struct DBaaSThanosResource {
+public struct DBaaSThanosResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {
@@ -641,7 +641,7 @@ public struct DBaaSThanosResource {
 }
 
 /// Access to DBaaS Valkey API operations.
-public struct DBaaSValkeyResource {
+public struct DBaaSValkeyResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

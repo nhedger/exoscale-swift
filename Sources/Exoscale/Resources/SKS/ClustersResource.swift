@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to SKS cluster API operations.
-public struct ClustersResource {
+public struct ClustersResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {

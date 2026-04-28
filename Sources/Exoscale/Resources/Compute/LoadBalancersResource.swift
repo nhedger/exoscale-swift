@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to network load balancer API operations.
-public struct LoadBalancersResource {
+public struct LoadBalancersResource: Sendable {
     public enum Field: String, Sendable {
         case description
         case labels

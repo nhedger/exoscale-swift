@@ -1,7 +1,7 @@
 import Foundation
 
 /// Access to DNS record API operations.
-public struct RecordsResource {
+public struct RecordsResource: Sendable {
     let http: Http.Client
 
     init(http: Http.Client) {
