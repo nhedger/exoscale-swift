@@ -112,5 +112,11 @@ func clientBuildsRequestsFromZoneEndpoint() throws {
 func clientMapsAuthorizationResponseStatusCodes() {
     #expect(Http.Client.error(forResponseStatusCode: 401) == Exoscale.ApiError.unauthorized)
     #expect(Http.Client.error(forResponseStatusCode: 403) == Exoscale.ApiError.forbidden)
+    #expect(
+        Http.Client.error(
+            forResponseStatusCode: 403,
+            data: Data("Forbidden by role policy: missing permission".utf8)
+        ) == Exoscale.ApiError.forbiddenByPolicy
+    )
     #expect(Http.Client.error(forResponseStatusCode: 404) == nil)
 }

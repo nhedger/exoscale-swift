@@ -45,28 +45,36 @@ extension Http {
                 headers: headers
             )
 
-            do {
-                return try await session
-                    .request(request)
-                    .validate()
-                    .serializingData()
-                    .value
-            } catch let error as AFError {
+            let response = await session
+                .request(request)
+                .validate()
+                .serializingData()
+                .response
+
+            if let error = response.error {
                 if let responseCode = error.responseCode,
-                   let exoscaleError = Self.error(forResponseStatusCode: responseCode) {
+                   let exoscaleError = Self.error(forResponseStatusCode: responseCode, data: response.data) {
                     throw exoscaleError
                 }
 
                 throw error
             }
+
+            return response.data ?? Data()
         }
 
-        static func error(forResponseStatusCode statusCode: Int) -> Exoscale.ApiError? {
+        static func error(forResponseStatusCode statusCode: Int, data: Data? = nil) -> Exoscale.ApiError? {
             switch statusCode {
             case 401:
                 .unauthorized
             case 403:
-                .forbidden
+                if let data,
+                   let message = String(data: data, encoding: .utf8),
+                   message.contains("Forbidden by role policy") {
+                    .forbiddenByPolicy
+                } else {
+                    .forbidden
+                }
             default:
                 nil
             }
