@@ -39,7 +39,26 @@ public struct DeploymentsResource: Sendable {
         gpuCount: Int,
         replicas: Int,
         inferenceEngineVersion: String? = nil,
-        inferenceEngineParameters: [String]? = nil
+        inferenceEngineParameters: [String]? = nil,
+        productName: String? = nil
+    ) async throws -> Exoscale.Operation {
+        try await create(
+            name: name, model: .init(id: modelID), gpuType: gpuType, gpuCount: gpuCount,
+            replicas: replicas, inferenceEngineVersion: inferenceEngineVersion,
+            inferenceEngineParameters: inferenceEngineParameters, productName: productName
+        )
+    }
+
+    /// Creates an AI deployment using a model reference containing either an ID or a name.
+    public func create(
+        name: String,
+        model: Exoscale.AIDeployment.ModelReference,
+        gpuType: String,
+        gpuCount: Int,
+        replicas: Int,
+        inferenceEngineVersion: String? = nil,
+        inferenceEngineParameters: [String]? = nil,
+        productName: String? = nil
     ) async throws -> Exoscale.Operation {
         let body = try JSONEncoder().encode(
             CreateDeploymentRequest(
@@ -49,7 +68,8 @@ public struct DeploymentsResource: Sendable {
                 gpuType: gpuType,
                 replicas: replicas,
                 inferenceEngineParameters: inferenceEngineParameters,
-                model: .init(id: modelID)
+                model: model,
+                productName: productName
             )
         )
 

@@ -26,9 +26,9 @@ public struct KMSKeysResource: Sendable {
     /// - Returns: The KMS key returned by the API.
     public func create(
         name: String,
-        description: String,
-        usage: Exoscale.KMSKey.Usage = .encryptDecrypt,
-        multiZone: Bool
+        description: String? = nil,
+        usage: Exoscale.KMSKey.Usage? = nil,
+        multiZone: Bool? = nil
     ) async throws -> Exoscale.KMSKey {
         let body = try JSONEncoder().encode(
             CreateKMSKeyRequest(
@@ -150,17 +150,17 @@ public struct KMSKeysResource: Sendable {
     /// - Parameters:
     ///   - id: The KMS key identifier.
     ///   - delayDays: Optional number of days to wait until deletion is final.
-    /// - Returns: The action status returned by the API.
+    /// - Returns: The scheduled deletion timestamp.
     public func scheduleDeletion(
         id: String,
         delayDays: Int? = nil
-    ) async throws -> Exoscale.KMSKey.ActionStatus {
+    ) async throws -> Date {
         let body = try JSONEncoder().encode(ScheduleKMSKeyDeletionRequest(delayDays: delayDays))
         let response = try await http.post(
             path: "/kms-key/\(id)/schedule-deletion",
             body: body,
-            as: KMSKeyActionResponse.self
+            as: ScheduleKMSKeyDeletionResponse.self
         )
-        return response.status
+        return response.deleteAt
     }
 }

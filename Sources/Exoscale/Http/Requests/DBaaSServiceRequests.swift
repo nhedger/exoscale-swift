@@ -121,6 +121,7 @@ struct CreateDBaaSMySQLServiceRequest: Codable, Sendable {
 
 /// Request body for updating a DBaaS MySQL service.
 struct UpdateDBaaSMySQLServiceRequest: Codable, Sendable {
+    var version: String?
     let maintenance: Exoscale.DBaaS.Maintenance?
     let plan: String?
     let terminationProtection: Bool?
@@ -131,6 +132,7 @@ struct UpdateDBaaSMySQLServiceRequest: Codable, Sendable {
     let backupSchedule: Exoscale.DBaaS.BackupSchedule?
 
     enum CodingKeys: String, CodingKey {
+        case version
         case maintenance
         case plan
         case terminationProtection = "termination-protection"
@@ -266,6 +268,7 @@ struct UpdateDBaaSThanosServiceRequest: Codable, Sendable {
 
 /// Request body for creating a DBaaS Valkey service.
 struct CreateDBaaSValkeyServiceRequest: Codable, Sendable {
+    var version: String?
     let maintenance: Exoscale.DBaaS.Maintenance?
     let plan: String
     let terminationProtection: Bool?
@@ -282,6 +285,7 @@ struct CreateDBaaSValkeyServiceRequest: Codable, Sendable {
         case ipFilter = "ip-filter"
         case migration
         case valkeySettings = "valkey-settings"
+        case version
         case forkFromService = "fork-from-service"
         case recoveryBackupName = "recovery-backup-name"
     }
@@ -289,6 +293,7 @@ struct CreateDBaaSValkeyServiceRequest: Codable, Sendable {
 
 /// Request body for updating a DBaaS Valkey service.
 struct UpdateDBaaSValkeyServiceRequest: Codable, Sendable {
+    var version: String?
     let maintenance: Exoscale.DBaaS.Maintenance?
     let plan: String?
     let terminationProtection: Bool?
@@ -303,6 +308,7 @@ struct UpdateDBaaSValkeyServiceRequest: Codable, Sendable {
         case ipFilter = "ip-filter"
         case migration
         case valkeySettings = "valkey-settings"
+        case version
     }
 }
 

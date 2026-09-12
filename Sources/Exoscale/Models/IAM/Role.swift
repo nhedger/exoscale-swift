@@ -9,7 +9,7 @@ public extension Exoscale {
         public let description: String?
         public let labels: [String: String]?
         public let permissions: [Permission]?
-        public let assumeRolePolicy: IAMPolicy?
+        public let assumeRolePolicy: IAMAssumeRolePolicy?
         public let editable: Bool?
         public let name: String?
         public let maxSessionTTL: Int?

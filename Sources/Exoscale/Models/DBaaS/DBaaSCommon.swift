@@ -1,3 +1,5 @@
+import Foundation
+
 public extension Exoscale.DBaaS {
     /// DBaaS backup schedule.
     struct BackupSchedule: Codable, Sendable {
@@ -37,9 +39,9 @@ public extension Exoscale.DBaaS {
     /// DBaaS maintenance update metadata.
     struct MaintenanceUpdate: Codable, Sendable {
         public let description: String?
-        public let deadline: String?
-        public let startAfter: String?
-        public let startAt: String?
+        public let deadline: Date?
+        public let startAfter: Date?
+        public let startAt: Date?
 
         enum CodingKeys: String, CodingKey {
             case description
@@ -177,7 +179,7 @@ public extension Exoscale.DBaaS {
     /// DBaaS service backup.
     struct Backup: Codable, Sendable {
         public let backupName: String?
-        public let backupTime: String?
+        public let backupTime: Date?
         public let dataSize: Int?
 
         enum CodingKeys: String, CodingKey {

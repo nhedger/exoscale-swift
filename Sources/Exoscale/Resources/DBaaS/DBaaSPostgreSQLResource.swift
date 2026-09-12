@@ -62,9 +62,10 @@ public struct DBaaSPostgreSQLResource: Sendable {
         integrations: [Exoscale.DBaaS.PostgreSQL.IntegrationInput]? = nil,
         forkFromService: String? = nil,
         recoveryBackupTime: String? = nil,
-        migration: Exoscale.DBaaS.PostgreSQL.Migration? = nil
+        migration: Exoscale.DBaaS.PostgreSQL.Migration? = nil,
+        pgauditSettings: [String: Exoscale.JSONValue]? = nil
     ) async throws -> Exoscale.Operation {
-        let body = try JSONEncoder().encode(
+        let body = try Exoscale.jsonEncoder().encode(
             CreateDBaaSPostgreSQLServiceRequest(
                 pgbouncerSettings: pgbouncerSettings,
                 backupSchedule: backupSchedule,
@@ -85,7 +86,8 @@ public struct DBaaSPostgreSQLResource: Sendable {
                 sharedBuffersPercentage: sharedBuffersPercentage,
                 pgSettings: pgSettings,
                 adminPassword: adminPassword,
-                migration: migration
+                migration: migration,
+                pgauditSettings: pgauditSettings
             )
         )
 
@@ -128,9 +130,10 @@ public struct DBaaSPostgreSQLResource: Sendable {
         synchronousReplication: Exoscale.DBaaS.PostgreSQL.SynchronousReplication? = nil,
         workMem: Int? = nil,
         sharedBuffersPercentage: Int? = nil,
-        migration: Exoscale.DBaaS.PostgreSQL.Migration? = nil
+        migration: Exoscale.DBaaS.PostgreSQL.Migration? = nil,
+        pgauditSettings: [String: Exoscale.JSONValue]? = nil
     ) async throws -> Exoscale.Operation {
-        let body = try JSONEncoder().encode(
+        let body = try Exoscale.jsonEncoder().encode(
             UpdateDBaaSPostgreSQLServiceRequest(
                 pgbouncerSettings: pgbouncerSettings,
                 backupSchedule: backupSchedule,
@@ -146,7 +149,8 @@ public struct DBaaSPostgreSQLResource: Sendable {
                 workMem: workMem,
                 sharedBuffersPercentage: sharedBuffersPercentage,
                 pgSettings: pgSettings,
-                migration: migration
+                migration: migration,
+                pgauditSettings: pgauditSettings
             )
         )
 

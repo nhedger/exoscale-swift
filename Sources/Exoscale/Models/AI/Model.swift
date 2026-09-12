@@ -1,3 +1,5 @@
+import Foundation
+
 public extension Exoscale {
     /// AI model returned by the API.
     struct Model: Codable, Sendable {
@@ -9,12 +11,12 @@ public extension Exoscale {
             case created
         }
 
-        public let updatedAt: String?
+        public let updatedAt: Date?
         public let name: String?
         public let state: State?
         public let id: String?
         public let modelSize: Int?
-        public let createdAt: String?
+        public let createdAt: Date?
 
         enum CodingKeys: String, CodingKey {
             case updatedAt = "updated-at"

@@ -82,11 +82,11 @@ func listDeploymentsResponseDecodesDeployments() throws {
         """.utf8
     )
 
-    let response = try JSONDecoder().decode(ListDeploymentsResponse.self, from: data)
+    let response = try Exoscale.jsonDecoder().decode(ListDeploymentsResponse.self, from: data)
     let deployment = try #require(response.deployments.first)
 
     #expect(deployment.gpuCount == 2)
-    #expect(deployment.updatedAt == "2026-04-27T10:00:00Z")
+    #expect(deployment.updatedAt == Date(timeIntervalSince1970: 1777284000))
     #expect(deployment.deploymentURL == "https://chat.example.com")
     #expect(deployment.serviceLevel == "standard")
     #expect(deployment.inferenceEngineVersion == "0.19.0")
@@ -96,7 +96,7 @@ func listDeploymentsResponseDecodesDeployments() throws {
     #expect(deployment.id == "22222222-2222-2222-2222-222222222222")
     #expect(deployment.replicas == 3)
     #expect(deployment.stateDetails == "healthy")
-    #expect(deployment.createdAt == "2026-04-27T09:00:00Z")
+    #expect(deployment.createdAt == Date(timeIntervalSince1970: 1777280400))
     #expect(deployment.inferenceEngineParameters == ["--max-model-len", "4096"])
     #expect(deployment.model?.id == "11111111-1111-1111-1111-111111111111")
     #expect(deployment.model?.name == "openai/gpt-oss-120b")
@@ -108,7 +108,7 @@ func aiDeploymentHelperResponsesDecodeValues() throws {
         RevealDeploymentAPIKeyResponse.self,
         from: Data(#"{"api-key":"deployment-key"}"#.utf8)
     )
-    let logsResponse = try JSONDecoder().decode(
+    let logsResponse = try Exoscale.jsonDecoder().decode(
         GetDeploymentLogsResponse.self,
         from: Data(
             #"{"logs":[{"time":"2026-04-27T10:00:00Z","node":"node-1","message":"ready"}]}"#.utf8
@@ -126,7 +126,7 @@ func aiDeploymentHelperResponsesDecodeValues() throws {
     )
 
     #expect(apiKeyResponse.apiKey == "deployment-key")
-    #expect(logsResponse.logs.first?.time == "2026-04-27T10:00:00Z")
+    #expect(logsResponse.logs.first?.time == Date(timeIntervalSince1970: 1777284000))
     #expect(logsResponse.logs.first?.node == "node-1")
     #expect(logsResponse.logs.first?.message == "ready")
     #expect(helpResponse.parameters.first?.allowedValues == ["4096"])

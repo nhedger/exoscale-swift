@@ -1,8 +1,10 @@
+import Foundation
+
 public extension Exoscale {
     /// DNS domain returned by the API.
     struct Domain: Codable, Sendable {
         public let id: String?
-        public let createdAt: String?
+        public let createdAt: Date?
         public let unicodeName: String?
 
         enum CodingKeys: String, CodingKey {

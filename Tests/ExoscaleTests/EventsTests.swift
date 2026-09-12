@@ -46,7 +46,7 @@ func eventDecodesMutationEventDetails() throws {
         """.utf8
     )
 
-    let events = try JSONDecoder().decode([Exoscale.Event].self, from: data)
+    let events = try Exoscale.jsonDecoder().decode([Exoscale.Event].self, from: data)
     let event = try #require(events.first)
 
     #expect(event.iamUser?.id == "11111111-1111-1111-1111-111111111111")
@@ -64,7 +64,7 @@ func eventDecodesMutationEventDetails() throws {
     #expect(event.iamAPIKey?.roleID == "33333333-3333-3333-3333-333333333333")
     #expect(event.uri == "/v2/instance")
     #expect(event.elapsedMS == 42)
-    #expect(event.timestamp == "2026-04-27T10:00:00Z")
+    #expect(event.timestamp == Date(timeIntervalSince1970: 1777284000))
     #expect(event.pathParams?["id"] == .string("44444444-4444-4444-4444-444444444444"))
     #expect(event.handler == "create-instance")
     #expect(event.message == "Instance created")

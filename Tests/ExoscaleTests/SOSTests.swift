@@ -20,11 +20,11 @@ func listSOSBucketsUsageResponseDecodesSOSBucketsUsage() throws {
         """.utf8
     )
 
-    let response = try JSONDecoder().decode(ListSOSBucketsUsageResponse.self, from: data)
+    let response = try Exoscale.jsonDecoder().decode(ListSOSBucketsUsageResponse.self, from: data)
     let usage = try #require(response.sosBucketsUsage.first)
 
     #expect(usage.name == "assets")
-    #expect(usage.createdAt == "2026-04-27T10:00:00Z")
+    #expect(usage.createdAt == Date(timeIntervalSince1970: 1777284000))
     #expect(usage.zoneName == .chGva2)
     #expect(usage.size == 1024)
 }

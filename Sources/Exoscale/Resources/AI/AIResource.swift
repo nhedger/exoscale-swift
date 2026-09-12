@@ -11,6 +11,11 @@ public final class AIResource: Sendable {
     /// Access to AI model API operations.
     public let models: ModelsResource
 
+    /// Retrieves the organization's AI consumption quota in weighted units per minute.
+    public func consumptionQuota() async throws -> Exoscale.AIConsumptionQuota {
+        try await http.get(path: "/ai/quota", as: Exoscale.AIConsumptionQuota.self)
+    }
+
     init(http: Http.Client) {
         self.http = http
         self.apiKeys = AIAPIKeysResource(http: http)

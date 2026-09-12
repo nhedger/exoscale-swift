@@ -1,3 +1,5 @@
+import Foundation
+
 public extension Exoscale {
     /// DBaaS models returned by the API.
     enum DBaaS {
@@ -38,7 +40,7 @@ public extension Exoscale.DBaaS {
         }
 
         public let id: String?
-        public let createTime: String?
+        public let createTime: Date?
         public let result: String?
         public let resultCodes: [ResultCode]?
         public let success: Bool?
@@ -115,9 +117,9 @@ public extension Exoscale.DBaaS.PostgreSQL {
     /// PostgreSQL maintenance update metadata.
     struct MaintenanceUpdate: Codable, Sendable {
         public let description: String?
-        public let deadline: String?
-        public let startAfter: String?
-        public let startAt: String?
+        public let deadline: Date?
+        public let startAfter: Date?
+        public let startAt: Date?
 
         enum CodingKeys: String, CodingKey {
             case description
@@ -278,7 +280,7 @@ public extension Exoscale.DBaaS.PostgreSQL {
 
         public struct Backup: Codable, Sendable {
             public let backupName: String?
-            public let backupTime: String?
+            public let backupTime: Date?
             public let dataSize: Int?
 
             enum CodingKeys: String, CodingKey {
@@ -304,7 +306,7 @@ public extension Exoscale.DBaaS.PostgreSQL {
         }
 
         public let pgbouncerSettings: [String: Exoscale.JSONValue]?
-        public let updatedAt: String?
+        public let updatedAt: Date?
         public let nodeCount: Int?
         public let connectionInfo: ConnectionInfo?
         public let backupSchedule: BackupSchedule?
@@ -332,11 +334,12 @@ public extension Exoscale.DBaaS.PostgreSQL {
         public let uri: String?
         public let uriParams: [String: Exoscale.JSONValue]?
         public let version: String?
-        public let createdAt: String?
+        public let createdAt: Date?
         public let plan: String?
         public let workMem: Int?
         public let sharedBuffersPercentage: Int?
         public let pgSettings: [String: Exoscale.JSONValue]?
+        public let pgauditSettings: [String: Exoscale.JSONValue]?
         public let maxConnections: Int?
         public let users: [User]?
 
@@ -375,6 +378,7 @@ public extension Exoscale.DBaaS.PostgreSQL {
             case workMem = "work-mem"
             case sharedBuffersPercentage = "shared-buffers-percentage"
             case pgSettings = "pg-settings"
+            case pgauditSettings = "pgaudit-settings"
             case maxConnections = "max-connections"
             case users
         }

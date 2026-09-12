@@ -4,6 +4,18 @@ import Foundation
 public struct ClustersResource: Sendable {
     let http: Http.Client
 
+    /// Generates a minimal Karpenter NodePool manifest.
+    public func generateKarpenterNodepool(id: String) async throws -> String {
+        let response = try await http.put(path: "/sks-cluster/\(id)/generate-karpenter-nodepool", as: KarpenterNodepoolResponse.self)
+        return response.nodepool
+    }
+
+    /// Generates an ExoscaleNodeClass manifest with the cluster's defaults.
+    public func generateKarpenterExoscaleNodeclass(id: String) async throws -> String {
+        let response = try await http.put(path: "/sks-cluster/\(id)/generate-karpenter-exoscale-nodeclass", as: KarpenterNodeclassResponse.self)
+        return response.exoscaleNodeclass
+    }
+
     init(http: Http.Client) {
         self.http = http
     }

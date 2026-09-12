@@ -1,3 +1,5 @@
+import Foundation
+
 public extension Exoscale.DBaaS {
     /// External endpoint type supported by DBaaS.
     enum ExternalEndpointType: String, Codable, Sendable {
@@ -32,7 +34,7 @@ public extension Exoscale.DBaaS {
 
     /// Common DBaaS service summary returned by the API.
     struct Service: Codable, Sendable {
-        public let updatedAt: String?
+        public let updatedAt: Date?
         public let nodeCount: Int?
         public let nodeCPUCount: Int?
         public let integrations: [Integration]?
@@ -44,7 +46,7 @@ public extension Exoscale.DBaaS {
         public let notifications: [Notification]?
         public let diskSize: Int?
         public let nodeMemory: Int?
-        public let createdAt: String?
+        public let createdAt: Date?
         public let plan: String?
 
         enum CodingKeys: String, CodingKey {

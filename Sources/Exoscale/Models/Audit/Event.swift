@@ -1,3 +1,5 @@
+import Foundation
+
 public extension Exoscale {
     /// Infrastructure mutation event returned by the API.
     struct Event: Codable, Sendable {
@@ -12,7 +14,7 @@ public extension Exoscale {
         public let iamAPIKey: Exoscale.APIKey?
         public let uri: String?
         public let elapsedMS: Int?
-        public let timestamp: String?
+        public let timestamp: Date?
         public let pathParams: [String: Exoscale.JSONValue]?
         public let handler: String?
         public let message: String?

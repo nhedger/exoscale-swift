@@ -95,7 +95,7 @@ func listTemplatesResponseDecodesTemplates() throws {
         """.utf8
     )
 
-    let response = try JSONDecoder().decode(ListTemplatesResponse.self, from: data)
+    let response = try Exoscale.jsonDecoder().decode(ListTemplatesResponse.self, from: data)
 
     #expect(response.templates.count == 1)
     #expect(response.templates[0].applicationConsistentSnapshotEnabled == true)
@@ -114,6 +114,6 @@ func listTemplatesResponseDecodesTemplates() throws {
     #expect(response.templates[0].zones == [.chGva2])
     #expect(response.templates[0].url == "https://example.com/template.qcow2")
     #expect(response.templates[0].version == "24.04")
-    #expect(response.templates[0].createdAt == "2026-04-27T10:00:00Z")
+    #expect(response.templates[0].createdAt == Date(timeIntervalSince1970: 1777284000))
     #expect(response.templates[0].visibility == .public)
 }

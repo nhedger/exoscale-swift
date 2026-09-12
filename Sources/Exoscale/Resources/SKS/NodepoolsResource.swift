@@ -44,7 +44,8 @@ public struct NodepoolsResource: Sendable {
         kubeletImageGC: Exoscale.SKSNodepool.KubeletImageGC? = nil,
         instancePrefix: String? = nil,
         deployTargetID: String? = nil,
-        addons: [Exoscale.SKSNodepool.Addon]? = nil
+        addons: [Exoscale.SKSNodepool.Addon]? = nil,
+        nvidiaMIGProfiles: Exoscale.NvidiaMIGProfiles? = nil
     ) async throws -> Exoscale.Operation {
         let body = try JSONEncoder().encode(
             CreateSKSNodepoolRequest(
@@ -62,7 +63,8 @@ public struct NodepoolsResource: Sendable {
                 instancePrefix: instancePrefix,
                 deployTarget: deployTargetID.map(SKSNodepoolReference.init(id:)),
                 addons: addons,
-                diskSize: diskSize
+                diskSize: diskSize,
+                nvidiaMIGProfiles: nvidiaMIGProfiles
             )
         )
 
@@ -117,7 +119,8 @@ public struct NodepoolsResource: Sendable {
         kubeletImageGC: Exoscale.SKSNodepool.KubeletImageGC? = nil,
         instancePrefix: String? = nil,
         deployTargetID: String? = nil,
-        diskSize: Int? = nil
+        diskSize: Int? = nil,
+        nvidiaMIGProfiles: Exoscale.NvidiaMIGProfiles? = nil
     ) async throws -> Exoscale.Operation {
         let body = try JSONEncoder().encode(
             UpdateSKSNodepoolRequest(
@@ -133,7 +136,8 @@ public struct NodepoolsResource: Sendable {
                 kubeletImageGC: kubeletImageGC,
                 instancePrefix: instancePrefix,
                 deployTarget: deployTargetID.map(SKSNodepoolReference.init(id:)),
-                diskSize: diskSize
+                diskSize: diskSize,
+                nvidiaMIGProfiles: nvidiaMIGProfiles
             )
         )
 

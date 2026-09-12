@@ -133,27 +133,27 @@ func dbaasServiceTypeRequestBodiesEncode() throws {
 
 @Test("DBaaS service type responses decode")
 func dbaasServiceTypeResponsesDecode() throws {
-    let grafana = try JSONDecoder().decode(
+    let grafana = try Exoscale.jsonDecoder().decode(
         Exoscale.DBaaS.Grafana.Service.self,
         from: Data(#"{"name":"grafana","plan":"startup-4","type":"grafana","state":"running","connection-info":{"uri":"https://grafana.example.com","username":"avnadmin","password":"secret"},"grafana-settings":{"allow_embedding":true}}"#.utf8)
     )
-    let kafka = try JSONDecoder().decode(
+    let kafka = try Exoscale.jsonDecoder().decode(
         Exoscale.DBaaS.Kafka.Service.self,
         from: Data(#"{"name":"kafka","plan":"startup-4","type":"kafka","state":"running","authentication-methods":{"certificate":true,"sasl":true},"connection-info":{"nodes":["kafka.example.com:9092"],"connect-uri":"https://connect.example.com"},"schema-registry-enabled":true,"users":[{"username":"app","access-cert":"cert"}]}"#.utf8)
     )
-    let mysql = try JSONDecoder().decode(
+    let mysql = try Exoscale.jsonDecoder().decode(
         Exoscale.DBaaS.MySQL.Service.self,
         from: Data(#"{"name":"mysql","plan":"startup-4","type":"mysql","state":"running","connection-info":{"uri":["mysql://user:pass@mysql.example.com/defaultdb"],"params":[{"host":"mysql.example.com"}]},"databases":["defaultdb"],"mysql-settings":{"sql_require_primary_key":true}}"#.utf8)
     )
-    let opensearch = try JSONDecoder().decode(
+    let opensearch = try Exoscale.jsonDecoder().decode(
         Exoscale.DBaaS.OpenSearch.Service.self,
         from: Data(#"{"name":"os","plan":"startup-4","type":"opensearch","state":"running","connection-info":{"uri":["https://os.example.com"],"dashboard-uri":"https://dash.example.com"},"index-template":{"number-of-shards":3},"opensearch-dashboards":{"enabled":true}}"#.utf8)
     )
-    let thanos = try JSONDecoder().decode(
+    let thanos = try Exoscale.jsonDecoder().decode(
         Exoscale.DBaaS.Thanos.Service.self,
         from: Data(#"{"name":"thanos","plan":"startup-4","type":"thanos","state":"running","connection-info":{"query-uri":"https://query.example.com"},"thanos-settings":{"compactor":{"retention.days":30}}}"#.utf8)
     )
-    let valkey = try JSONDecoder().decode(
+    let valkey = try Exoscale.jsonDecoder().decode(
         Exoscale.DBaaS.Valkey.Service.self,
         from: Data(#"{"name":"valkey","plan":"startup-4","type":"valkey","state":"running","connection-info":{"uri":["rediss://valkey.example.com"],"password":"secret"},"users":[{"username":"app","access-control":{"keys":["app:*"]}}]}"#.utf8)
     )
@@ -217,7 +217,7 @@ func dbaasServiceTypeSettingsAndSecretsDecode() throws {
         from: Data("{\"settings\":{\"valkey\":\(settingsSchema)}}".utf8)
     )
 
-    let kafkaSecrets = try JSONDecoder().decode(
+    let kafkaSecrets = try Exoscale.jsonDecoder().decode(
         Exoscale.DBaaS.Kafka.UserSecrets.self,
         from: Data(#"{"username":"app","password":"secret","access-cert":"cert","access-key":"key"}"#.utf8)
     )

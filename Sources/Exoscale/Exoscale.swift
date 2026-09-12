@@ -47,6 +47,9 @@ public final class Exoscale: Sendable {
     /// Access to zone-related API operations.
     public let zones: ZonesResource
 
+    /// Access to VPC networking API operations (beta).
+    public let vpcs: VPCsResource
+
     init(config: Exoscale.Config) {
         let http = Http.Client(config: config)
 
@@ -66,6 +69,7 @@ public final class Exoscale: Sendable {
         self.quotas = QuotasResource(http: http)
         self.sks = SKSResource(http: http)
         self.zones = ZonesResource(http: http)
+        self.vpcs = VPCsResource(http: http)
     }
 }
 

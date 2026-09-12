@@ -240,7 +240,7 @@ func dbaasPostgreSQLServiceDecodes() throws {
         """.utf8
     )
 
-    let service = try JSONDecoder().decode(Exoscale.DBaaS.PostgreSQL.Service.self, from: data)
+    let service = try Exoscale.jsonDecoder().decode(Exoscale.DBaaS.PostgreSQL.Service.self, from: data)
 
     #expect(service.name == "primary-pg")
     #expect(service.plan == "startup-4")
@@ -273,7 +273,7 @@ func dbaasPostgreSQLResponsesDecode() throws {
     let taskData = Data(
         #"{"id":"11111111-1111-1111-1111-111111111111","create-time":"2026-04-27T10:00:00Z","result":"ok","result-codes":[{"code":"ready","dbname":"app"}],"success":true,"task-type":"upgrade_check"}"#.utf8
     )
-    let task = try JSONDecoder().decode(Exoscale.DBaaS.Task.self, from: taskData)
+    let task = try Exoscale.jsonDecoder().decode(Exoscale.DBaaS.Task.self, from: taskData)
 
     let settingsData = Data(
         """

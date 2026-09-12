@@ -4,6 +4,9 @@ import Foundation
 public final class DBaaSResource: Sendable {
     let http: Http.Client
 
+    /// Access to DBaaS ClickHouse API operations (beta).
+    public let clickhouse: DBaaSClickHouseResource
+
     /// Access to DBaaS external endpoint API operations.
     public let externalEndpoints: DBaaSExternalEndpointsResource
 
@@ -36,6 +39,7 @@ public final class DBaaSResource: Sendable {
 
     init(http: Http.Client) {
         self.http = http
+        self.clickhouse = DBaaSClickHouseResource(http: http)
         self.externalEndpoints = DBaaSExternalEndpointsResource(http: http)
         self.externalIntegrations = DBaaSExternalIntegrationsResource(http: http)
         self.grafana = DBaaSGrafanaResource(http: http)

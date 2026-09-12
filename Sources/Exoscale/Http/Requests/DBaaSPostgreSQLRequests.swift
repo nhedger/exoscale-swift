@@ -22,6 +22,7 @@ struct CreateDBaaSPostgreSQLServiceRequest: Codable, Sendable {
     let pgSettings: [String: Exoscale.JSONValue]?
     let adminPassword: String?
     let migration: DBaaSPostgreSQL.Migration?
+    var pgauditSettings: [String: Exoscale.JSONValue]?
 
     enum CodingKeys: String, CodingKey {
         case pgbouncerSettings = "pgbouncer-settings"
@@ -44,6 +45,7 @@ struct CreateDBaaSPostgreSQLServiceRequest: Codable, Sendable {
         case pgSettings = "pg-settings"
         case adminPassword = "admin-password"
         case migration
+        case pgauditSettings = "pgaudit-settings"
     }
 }
 
@@ -64,6 +66,7 @@ struct UpdateDBaaSPostgreSQLServiceRequest: Codable, Sendable {
     let sharedBuffersPercentage: Int?
     let pgSettings: [String: Exoscale.JSONValue]?
     let migration: DBaaSPostgreSQL.Migration?
+    var pgauditSettings: [String: Exoscale.JSONValue]?
 
     enum CodingKeys: String, CodingKey {
         case pgbouncerSettings = "pgbouncer-settings"
@@ -81,6 +84,7 @@ struct UpdateDBaaSPostgreSQLServiceRequest: Codable, Sendable {
         case sharedBuffersPercentage = "shared-buffers-percentage"
         case pgSettings = "pg-settings"
         case migration
+        case pgauditSettings = "pgaudit-settings"
     }
 }
 

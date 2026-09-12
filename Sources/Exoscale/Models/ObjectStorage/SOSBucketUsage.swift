@@ -1,8 +1,10 @@
+import Foundation
+
 public extension Exoscale {
     /// SOS bucket usage returned by the API.
     struct SOSBucketUsage: Codable, Sendable {
         public let name: String?
-        public let createdAt: String?
+        public let createdAt: Date?
         public let zoneName: Exoscale.KnownZone?
         public let size: Int?
 

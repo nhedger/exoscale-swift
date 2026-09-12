@@ -13,6 +13,7 @@ struct UpdateSKSNodepoolRequest: Codable, Sendable {
     let instancePrefix: String?
     let deployTarget: SKSNodepoolReference?
     let diskSize: Int?
+    var nvidiaMIGProfiles: Exoscale.NvidiaMIGProfiles?
 
     enum CodingKeys: String, CodingKey {
         case antiAffinityGroups = "anti-affinity-groups"
@@ -28,5 +29,6 @@ struct UpdateSKSNodepoolRequest: Codable, Sendable {
         case instancePrefix = "instance-prefix"
         case deployTarget = "deploy-target"
         case diskSize = "disk-size"
+        case nvidiaMIGProfiles = "nvidia-mig-profiles"
     }
 }

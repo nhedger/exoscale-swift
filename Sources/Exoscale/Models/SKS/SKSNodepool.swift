@@ -1,3 +1,5 @@
+import Foundation
+
 public extension Exoscale {
     /// SKS nodepool returned by the API.
     struct SKSNodepool: Codable, Sendable {
@@ -86,7 +88,8 @@ public extension Exoscale {
         public let id: String?
         public let diskSize: Int?
         public let version: String?
-        public let createdAt: String?
+        public let createdAt: Date?
+        public let nvidiaMIGProfiles: NvidiaMIGProfiles?
 
         enum CodingKeys: String, CodingKey {
             case antiAffinityGroups = "anti-affinity-groups"
@@ -110,6 +113,7 @@ public extension Exoscale {
             case diskSize = "disk-size"
             case version
             case createdAt = "created-at"
+            case nvidiaMIGProfiles = "nvidia-mig-profiles"
         }
     }
 }

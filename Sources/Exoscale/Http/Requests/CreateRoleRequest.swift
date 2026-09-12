@@ -6,7 +6,7 @@ struct CreateRoleRequest: Codable, Sendable {
     let editable: Bool?
     let labels: [String: String]?
     let policy: Exoscale.IAMPolicy?
-    let assumeRolePolicy: Exoscale.IAMPolicy?
+    let assumeRolePolicy: Exoscale.IAMAssumeRolePolicy?
     let maxSessionTTL: Int?
 
     enum CodingKeys: String, CodingKey {

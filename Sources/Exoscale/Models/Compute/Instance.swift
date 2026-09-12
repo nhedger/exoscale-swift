@@ -1,3 +1,5 @@
+import Foundation
+
 public extension Exoscale {
     /// Compute instance returned by the API.
     struct Instance: Codable, Sendable {
@@ -85,8 +87,9 @@ public extension Exoscale {
         public let deployTarget: DeployTargetReference?
         public let snapshots: [SnapshotReference]?
         public let diskSize: Int?
+        public let diskEncrypted: Bool?
         public let sshKeys: [Exoscale.SSHKey]?
-        public let createdAt: String?
+        public let createdAt: Date?
 
         enum CodingKeys: String, CodingKey {
             case applicationConsistentSnapshotEnabled = "application-consistent-snapshot-enabled"
@@ -112,6 +115,7 @@ public extension Exoscale {
             case deployTarget = "deploy-target"
             case snapshots
             case diskSize = "disk-size"
+            case diskEncrypted = "disk-encrypted"
             case sshKeys = "ssh-keys"
             case createdAt = "created-at"
         }

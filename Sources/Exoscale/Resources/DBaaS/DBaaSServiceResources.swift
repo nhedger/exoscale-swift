@@ -23,7 +23,7 @@ public struct DBaaSGrafanaResource: Sendable {
         grafanaSettings: [String: Exoscale.JSONValue]? = nil,
         ipFilter: [String]? = nil
     ) async throws -> Exoscale.Operation {
-        let body = try JSONEncoder().encode(
+        let body = try Exoscale.jsonEncoder().encode(
             CreateDBaaSGrafanaServiceRequest(
                 maintenance: maintenance,
                 plan: plan,
@@ -45,7 +45,7 @@ public struct DBaaSGrafanaResource: Sendable {
         grafanaSettings: [String: Exoscale.JSONValue]? = nil,
         ipFilter: [String]? = nil
     ) async throws -> Exoscale.Operation {
-        let body = try JSONEncoder().encode(
+        let body = try Exoscale.jsonEncoder().encode(
             UpdateDBaaSGrafanaServiceRequest(
                 maintenance: maintenance,
                 plan: plan,
@@ -122,7 +122,7 @@ public struct DBaaSKafkaResource: Sendable {
         schemaRegistryEnabled: Bool? = nil,
         version: String? = nil
     ) async throws -> Exoscale.Operation {
-        let body = try JSONEncoder().encode(
+        let body = try Exoscale.jsonEncoder().encode(
             DBaaSKafkaServiceRequest(
                 authenticationMethods: authenticationMethods,
                 kafkaRestEnabled: kafkaRestEnabled,
@@ -159,7 +159,7 @@ public struct DBaaSKafkaResource: Sendable {
         schemaRegistryEnabled: Bool? = nil,
         version: String? = nil
     ) async throws -> Exoscale.Operation {
-        let body = try JSONEncoder().encode(
+        let body = try Exoscale.jsonEncoder().encode(
             DBaaSKafkaServiceRequest(
                 authenticationMethods: authenticationMethods,
                 kafkaRestEnabled: kafkaRestEnabled,
@@ -294,7 +294,7 @@ public struct DBaaSMySQLResource: Sendable {
         migration: Exoscale.DBaaS.Migration? = nil,
         binlogRetentionPeriod: Int? = nil
     ) async throws -> Exoscale.Operation {
-        let body = try JSONEncoder().encode(
+        let body = try Exoscale.jsonEncoder().encode(
             CreateDBaaSMySQLServiceRequest(
                 backupSchedule: backupSchedule,
                 integrations: integrations,
@@ -325,10 +325,12 @@ public struct DBaaSMySQLResource: Sendable {
         mysqlSettings: [String: Exoscale.JSONValue]? = nil,
         migration: Exoscale.DBaaS.Migration? = nil,
         binlogRetentionPeriod: Int? = nil,
-        backupSchedule: Exoscale.DBaaS.BackupSchedule? = nil
+        backupSchedule: Exoscale.DBaaS.BackupSchedule? = nil,
+        version: String? = nil
     ) async throws -> Exoscale.Operation {
-        let body = try JSONEncoder().encode(
+        let body = try Exoscale.jsonEncoder().encode(
             UpdateDBaaSMySQLServiceRequest(
+                version: version,
                 maintenance: maintenance,
                 plan: plan,
                 terminationProtection: terminationProtection,
@@ -450,7 +452,7 @@ public struct DBaaSOpenSearchResource: Sendable {
         recoveryBackupName: String? = nil,
         opensearchDashboards: Exoscale.DBaaS.OpenSearch.Dashboards? = nil
     ) async throws -> Exoscale.Operation {
-        let body = try JSONEncoder().encode(
+        let body = try Exoscale.jsonEncoder().encode(
             CreateDBaaSOpenSearchServiceRequest(
                 maxIndexCount: maxIndexCount,
                 keepIndexRefreshInterval: keepIndexRefreshInterval,
@@ -485,7 +487,7 @@ public struct DBaaSOpenSearchResource: Sendable {
         version: String? = nil,
         opensearchDashboards: Exoscale.DBaaS.OpenSearch.Dashboards? = nil
     ) async throws -> Exoscale.Operation {
-        let body = try JSONEncoder().encode(
+        let body = try Exoscale.jsonEncoder().encode(
             UpdateDBaaSOpenSearchServiceRequest(
                 maxIndexCount: maxIndexCount,
                 keepIndexRefreshInterval: keepIndexRefreshInterval,
@@ -582,7 +584,7 @@ public struct DBaaSThanosResource: Sendable {
         ipFilter: [String]? = nil,
         thanosSettings: [String: Exoscale.JSONValue]? = nil
     ) async throws -> Exoscale.Operation {
-        let body = try JSONEncoder().encode(
+        let body = try Exoscale.jsonEncoder().encode(
             CreateDBaaSThanosServiceRequest(
                 maintenance: maintenance,
                 plan: plan,
@@ -603,7 +605,7 @@ public struct DBaaSThanosResource: Sendable {
         ipFilter: [String]? = nil,
         thanosSettings: [String: Exoscale.JSONValue]? = nil
     ) async throws -> Exoscale.Operation {
-        let body = try JSONEncoder().encode(
+        let body = try Exoscale.jsonEncoder().encode(
             UpdateDBaaSThanosServiceRequest(
                 maintenance: maintenance,
                 plan: plan,
@@ -663,10 +665,12 @@ public struct DBaaSValkeyResource: Sendable {
         migration: Exoscale.DBaaS.Migration? = nil,
         valkeySettings: [String: Exoscale.JSONValue]? = nil,
         forkFromService: String? = nil,
-        recoveryBackupName: String? = nil
+        recoveryBackupName: String? = nil,
+        version: String? = nil
     ) async throws -> Exoscale.Operation {
-        let body = try JSONEncoder().encode(
+        let body = try Exoscale.jsonEncoder().encode(
             CreateDBaaSValkeyServiceRequest(
+                version: version,
                 maintenance: maintenance,
                 plan: plan,
                 terminationProtection: terminationProtection,
@@ -688,10 +692,12 @@ public struct DBaaSValkeyResource: Sendable {
         terminationProtection: Bool? = nil,
         ipFilter: [String]? = nil,
         migration: Exoscale.DBaaS.Migration? = nil,
-        valkeySettings: [String: Exoscale.JSONValue]? = nil
+        valkeySettings: [String: Exoscale.JSONValue]? = nil,
+        version: String? = nil
     ) async throws -> Exoscale.Operation {
-        let body = try JSONEncoder().encode(
+        let body = try Exoscale.jsonEncoder().encode(
             UpdateDBaaSValkeyServiceRequest(
+                version: version,
                 maintenance: maintenance,
                 plan: plan,
                 terminationProtection: terminationProtection,

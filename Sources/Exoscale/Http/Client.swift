@@ -11,12 +11,13 @@ extension Http {
         private let session: Session
 
         init(
-            config: Exoscale.Config
+            config: Exoscale.Config,
+            sessionConfiguration: URLSessionConfiguration = .default
         ) {
             self.baseURL = config.apiEndpoint
             self.userAgent = config.userAgent
             self.session = Session(
-                configuration: .default,
+                configuration: sessionConfiguration,
                 interceptor: Interceptor(
                     adapters: [
                         ApplyUserAgent(userAgent: config.userAgent),
@@ -83,7 +84,7 @@ extension Http {
         private func decode<Response: Decodable>(
             _ data: Data,
             as type: Response.Type = Response.self,
-            decoder: JSONDecoder = JSONDecoder()
+            decoder: JSONDecoder = Exoscale.jsonDecoder()
         ) throws -> Response {
             return try decoder.decode(type, from: data)
         }
@@ -93,7 +94,7 @@ extension Http {
             query: [String: String?] = [:],
             headers: [String: String] = [:],
             as type: Response.Type = Response.self,
-            decoder: JSONDecoder = JSONDecoder()
+            decoder: JSONDecoder = Exoscale.jsonDecoder()
         ) async throws -> Response {
             try decode(
                 await requestData("GET", path: path, query: query, headers: headers),
@@ -108,7 +109,7 @@ extension Http {
             body: Data? = nil,
             headers: [String: String] = [:],
             as type: Response.Type = Response.self,
-            decoder: JSONDecoder = JSONDecoder()
+            decoder: JSONDecoder = Exoscale.jsonDecoder()
         ) async throws -> Response {
             try decode(
                 await requestData("POST", path: path, query: query, body: body, headers: headers),
@@ -123,7 +124,7 @@ extension Http {
             body: Data? = nil,
             headers: [String: String] = [:],
             as type: Response.Type = Response.self,
-            decoder: JSONDecoder = JSONDecoder()
+            decoder: JSONDecoder = Exoscale.jsonDecoder()
         ) async throws -> Response {
             try decode(
                 await requestData("PUT", path: path, query: query, body: body, headers: headers),
@@ -138,7 +139,7 @@ extension Http {
             body: Data? = nil,
             headers: [String: String] = [:],
             as type: Response.Type = Response.self,
-            decoder: JSONDecoder = JSONDecoder()
+            decoder: JSONDecoder = Exoscale.jsonDecoder()
         ) async throws -> Response {
             try decode(
                 await requestData("PATCH", path: path, query: query, body: body, headers: headers),
@@ -153,7 +154,7 @@ extension Http {
             body: Data? = nil,
             headers: [String: String] = [:],
             as type: Response.Type = Response.self,
-            decoder: JSONDecoder = JSONDecoder()
+            decoder: JSONDecoder = Exoscale.jsonDecoder()
         ) async throws -> Response {
             try decode(
                 await requestData("DELETE", path: path, query: query, body: body, headers: headers),

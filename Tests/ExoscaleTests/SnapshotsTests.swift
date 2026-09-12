@@ -51,12 +51,12 @@ func listSnapshotsResponseDecodesSnapshots() throws {
         """.utf8
     )
 
-    let response = try JSONDecoder().decode(ListSnapshotsResponse.self, from: data)
+    let response = try Exoscale.jsonDecoder().decode(ListSnapshotsResponse.self, from: data)
     let snapshot = try #require(response.snapshots.first)
 
     #expect(snapshot.id == "11111111-1111-1111-1111-111111111111")
     #expect(snapshot.name == "web-snapshot")
-    #expect(snapshot.createdAt == "2026-04-27T10:00:00Z")
+    #expect(snapshot.createdAt == Date(timeIntervalSince1970: 1777284000))
     #expect(snapshot.state == .exported)
     #expect(snapshot.size == 50)
     #expect(snapshot.export?.id == "22222222-2222-2222-2222-222222222222")

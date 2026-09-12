@@ -153,7 +153,7 @@ func listLoadBalancersResponseDecodesLoadBalancers() throws {
         """.utf8
     )
 
-    let response = try JSONDecoder().decode(ListLoadBalancersResponse.self, from: data)
+    let response = try Exoscale.jsonDecoder().decode(ListLoadBalancersResponse.self, from: data)
     let loadBalancer = try #require(response.loadBalancers.first)
     let service = try #require(loadBalancer.services?.first)
 
@@ -161,7 +161,7 @@ func listLoadBalancersResponseDecodesLoadBalancers() throws {
     #expect(loadBalancer.description == "Public web traffic")
     #expect(loadBalancer.name == "public-web")
     #expect(loadBalancer.state == .running)
-    #expect(loadBalancer.createdAt == "2026-04-27T10:00:00Z")
+    #expect(loadBalancer.createdAt == Date(timeIntervalSince1970: 1777284000))
     #expect(loadBalancer.ip == "203.0.113.20")
     #expect(loadBalancer.labels == ["env": "prod"])
     #expect(service.id == "33333333-3333-3333-3333-333333333333")

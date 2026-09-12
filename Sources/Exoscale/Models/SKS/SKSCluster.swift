@@ -1,3 +1,5 @@
+import Foundation
+
 public extension Exoscale {
     /// SKS cluster returned by the API.
     struct SKSCluster: Codable, Sendable {
@@ -54,8 +56,9 @@ public extension Exoscale {
         public let id: String?
         public let audit: Exoscale.SKSAudit?
         public let version: String?
-        public let createdAt: String?
+        public let createdAt: Date?
         public let endpoint: String?
+        public let oidc: SKSOIDC?
 
         enum CodingKeys: String, CodingKey {
             case description
@@ -76,6 +79,7 @@ public extension Exoscale {
             case version
             case createdAt = "created-at"
             case endpoint
+            case oidc
         }
     }
 }

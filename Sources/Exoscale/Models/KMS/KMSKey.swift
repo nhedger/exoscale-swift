@@ -1,3 +1,5 @@
+import Foundation
+
 public extension Exoscale {
     /// KMS key returned by the API.
     struct KMSKey: Codable, Sendable {
@@ -21,7 +23,7 @@ public extension Exoscale {
         }
 
         public struct Revision: Codable, Sendable {
-            public let at: String?
+            public let at: Date?
             public let seq: Int?
         }
 
@@ -29,7 +31,7 @@ public extension Exoscale {
             public let manualCount: Int?
             public let automatic: Bool?
             public let rotationPeriod: Int?
-            public let nextAt: String?
+            public let nextAt: Date?
 
             enum CodingKeys: String, CodingKey {
                 case manualCount = "manual-count"
@@ -41,7 +43,7 @@ public extension Exoscale {
 
         public struct Material: Codable, Sendable {
             public let version: Int?
-            public let createdAt: String?
+            public let createdAt: Date?
             public let automatic: Bool?
 
             enum CodingKeys: String, CodingKey {
@@ -54,7 +56,7 @@ public extension Exoscale {
         public struct ReplicaFailure: Codable, Sendable {
             public let attemptedWatermark: Int?
             public let error: String?
-            public let failedAt: String?
+            public let failedAt: Date?
 
             enum CodingKeys: String, CodingKey {
                 case attemptedWatermark = "attempted-watermark"
@@ -77,7 +79,7 @@ public extension Exoscale {
 
         public struct Rotation: Codable, Sendable {
             public let version: Int?
-            public let rotatedAt: String?
+            public let rotatedAt: Date?
             public let automatic: Bool?
 
             enum CodingKeys: String, CodingKey {
@@ -97,12 +99,14 @@ public extension Exoscale {
         public let usage: Usage?
         public let replicasStatus: [ReplicaState]?
         public let status: Status?
-        public let statusSince: String?
+        public let statusSince: Date?
         public let id: String?
         public let replicas: [String]?
         public let material: Material?
         public let originZone: String?
-        public let createdAt: String?
+        public let createdAt: Date?
+
+        public let deleteAt: Date?
 
         enum CodingKeys: String, CodingKey {
             case zone
@@ -121,6 +125,7 @@ public extension Exoscale {
             case material
             case originZone = "origin-zone"
             case createdAt = "created-at"
+            case deleteAt = "delete-at"
         }
     }
 }

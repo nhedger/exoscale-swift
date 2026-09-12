@@ -83,7 +83,7 @@ func listBlockStorageVolumesResponseDecodesBlockStorageVolumes() throws {
         """.utf8
     )
 
-    let response = try JSONDecoder().decode(ListBlockStorageVolumesResponse.self, from: data)
+    let response = try Exoscale.jsonDecoder().decode(ListBlockStorageVolumesResponse.self, from: data)
     let volume = try #require(response.blockStorageVolumes.first)
 
     #expect(volume.id == "11111111-1111-1111-1111-111111111111")
@@ -94,7 +94,7 @@ func listBlockStorageVolumesResponseDecodesBlockStorageVolumes() throws {
     #expect(volume.size == 100)
     #expect(volume.blockSize == 4096)
     #expect(volume.blockStorageSnapshots?.first?.id == "33333333-3333-3333-3333-333333333333")
-    #expect(volume.createdAt == "2026-04-27T10:00:00Z")
+    #expect(volume.createdAt == Date(timeIntervalSince1970: 1777284000))
 }
 
 @Test("ListBlockStorageSnapshotsResponse decodes block storage snapshots")
@@ -120,14 +120,14 @@ func listBlockStorageSnapshotsResponseDecodesBlockStorageSnapshots() throws {
         """.utf8
     )
 
-    let response = try JSONDecoder().decode(ListBlockStorageSnapshotsResponse.self, from: data)
+    let response = try Exoscale.jsonDecoder().decode(ListBlockStorageSnapshotsResponse.self, from: data)
     let snapshot = try #require(response.blockStorageSnapshots.first)
 
     #expect(snapshot.id == "11111111-1111-1111-1111-111111111111")
     #expect(snapshot.name == "data-snapshot")
     #expect(snapshot.size == 100)
     #expect(snapshot.volumeSize == 100)
-    #expect(snapshot.createdAt == "2026-04-27T10:00:00Z")
+    #expect(snapshot.createdAt == Date(timeIntervalSince1970: 1777284000))
     #expect(snapshot.state == .created)
     #expect(snapshot.labels == ["backup": "daily"])
     #expect(snapshot.blockStorageVolume?.id == "22222222-2222-2222-2222-222222222222")

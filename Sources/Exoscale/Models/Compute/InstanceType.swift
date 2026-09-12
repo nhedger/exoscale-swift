@@ -24,6 +24,7 @@ public extension Exoscale {
             case gpu
             case memory
             case gpua5000
+            case gpub300
             case gpurtx6000pro
             case storage
             case standard

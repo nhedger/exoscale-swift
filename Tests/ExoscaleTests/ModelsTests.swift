@@ -32,13 +32,13 @@ func listModelsResponseDecodesAIModels() throws {
         """.utf8
     )
 
-    let response = try JSONDecoder().decode(ListModelsResponse.self, from: data)
+    let response = try Exoscale.jsonDecoder().decode(ListModelsResponse.self, from: data)
 
     #expect(response.models.count == 1)
-    #expect(response.models[0].updatedAt == "2026-04-27T10:00:00Z")
+    #expect(response.models[0].updatedAt == Date(timeIntervalSince1970: 1777284000))
     #expect(response.models[0].name == "openai/gpt-oss-120b")
     #expect(response.models[0].state == .ready)
     #expect(response.models[0].id == "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb")
     #expect(response.models[0].modelSize == 123456)
-    #expect(response.models[0].createdAt == "2026-04-27T09:00:00Z")
+    #expect(response.models[0].createdAt == Date(timeIntervalSince1970: 1777280400))
 }

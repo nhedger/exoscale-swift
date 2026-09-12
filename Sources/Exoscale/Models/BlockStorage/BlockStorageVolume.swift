@@ -1,3 +1,5 @@
+import Foundation
+
 public extension Exoscale {
     /// Block storage volume returned by the API.
     struct BlockStorageVolume: Codable, Sendable {
@@ -26,10 +28,11 @@ public extension Exoscale {
         public let name: String?
         public let state: State?
         public let size: Int?
+        public let encrypted: Bool?
         public let blockSize: Int?
         public let blockStorageSnapshots: [Exoscale.BlockStorageSnapshot.Reference]?
         public let id: String?
-        public let createdAt: String?
+        public let createdAt: Date?
 
         enum CodingKeys: String, CodingKey {
             case labels
@@ -37,6 +40,7 @@ public extension Exoscale {
             case name
             case state
             case size
+            case encrypted
             case blockSize = "blocksize"
             case blockStorageSnapshots = "block-storage-snapshots"
             case id

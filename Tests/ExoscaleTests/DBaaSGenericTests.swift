@@ -75,7 +75,7 @@ func dbaasGenericRequestBodiesEncode() throws {
 func dbaasGenericResponsesDecode() throws {
     let ca = try JSONDecoder().decode(GetDBaaSCACertificateResponse.self, from: Data(#"{"certificate":"PEM"}"#.utf8))
 
-    let services = try JSONDecoder().decode(
+    let services = try Exoscale.jsonDecoder().decode(
         ListDBaaSServicesResponse.self,
         from: Data(#"{"dbaas-services":[{"name":"pg","plan":"startup-4","type":"pg","state":"running","termination-protection":true}]}"#.utf8)
     )

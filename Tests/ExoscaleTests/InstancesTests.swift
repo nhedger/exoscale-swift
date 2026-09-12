@@ -249,7 +249,7 @@ func listInstancesResponseDecodesInstances() throws {
         """.utf8
     )
 
-    let response = try JSONDecoder().decode(ListInstancesResponse.self, from: data)
+    let response = try Exoscale.jsonDecoder().decode(ListInstancesResponse.self, from: data)
 
     #expect(response.instances.count == 1)
     #expect(response.instances[0].applicationConsistentSnapshotEnabled == true)
@@ -275,7 +275,7 @@ func listInstancesResponseDecodesInstances() throws {
     #expect(response.instances[0].snapshots?.first?.id == "88888888-8888-8888-8888-888888888888")
     #expect(response.instances[0].diskSize == 50)
     #expect(response.instances[0].sshKeys?.first?.fingerprint == "aa:bb:cc")
-    #expect(response.instances[0].createdAt == "2026-04-27T10:00:00Z")
+    #expect(response.instances[0].createdAt == Date(timeIntervalSince1970: 1777284000))
     #expect(response.instances[0].labels == ["env": "prod"])
 }
 
@@ -298,7 +298,7 @@ func listInstancesResponseToleratesUnknownInstanceTypeSizeAndFamily() throws {
         """.utf8
     )
 
-    let response = try JSONDecoder().decode(ListInstancesResponse.self, from: data)
+    let response = try Exoscale.jsonDecoder().decode(ListInstancesResponse.self, from: data)
 
     #expect(response.instances.count == 1)
     #expect(response.instances[0].instanceType?.size == nil)

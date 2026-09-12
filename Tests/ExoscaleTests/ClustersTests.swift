@@ -202,7 +202,7 @@ func listSKSClustersResponseDecodesClusters() throws {
         """.utf8
     )
 
-    let response = try JSONDecoder().decode(ListSKSClustersResponse.self, from: data)
+    let response = try Exoscale.jsonDecoder().decode(ListSKSClustersResponse.self, from: data)
     let cluster = try #require(response.clusters.first)
     let nodepool = try #require(cluster.nodepools?.first)
 

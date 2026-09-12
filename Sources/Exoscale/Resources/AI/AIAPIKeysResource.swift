@@ -12,7 +12,7 @@ public struct AIAPIKeysResource: Sendable {
     ///
     /// - Returns: The AI API keys returned by the API.
     public func list() async throws -> [Exoscale.AIAPIKey] {
-        let response = try await http.get(path: "/ai/ai-api-key", as: ListAIAPIKeysResponse.self)
+        let response = try await http.get(path: "/ai/api-key", as: ListAIAPIKeysResponse.self)
         return response.aiAPIKeys
     }
 
@@ -26,7 +26,7 @@ public struct AIAPIKeysResource: Sendable {
         let body = try JSONEncoder().encode(CreateAIAPIKeyRequest(name: name, scope: scope))
 
         return try await http.post(
-            path: "/ai/ai-api-key",
+            path: "/ai/api-key",
             body: body,
             as: Exoscale.AIAPIKeyWithValue.self
         )
@@ -37,7 +37,7 @@ public struct AIAPIKeysResource: Sendable {
     /// - Parameter id: The AI API key identifier.
     /// - Returns: The AI API key returned by the API.
     public func get(id: String) async throws -> Exoscale.AIAPIKey {
-        try await http.get(path: "/ai/ai-api-key/\(id)", as: Exoscale.AIAPIKey.self)
+        try await http.get(path: "/ai/api-key/\(id)", as: Exoscale.AIAPIKey.self)
     }
 
     /// Updates an AI API key.
@@ -53,7 +53,7 @@ public struct AIAPIKeysResource: Sendable {
         let body = try JSONEncoder().encode(UpdateAIAPIKeyRequest(name: name, scope: scope))
 
         return try await http.patch(
-            path: "/ai/ai-api-key/\(id)",
+            path: "/ai/api-key/\(id)",
             body: body,
             as: Exoscale.AIAPIKey.self
         )
@@ -65,16 +65,23 @@ public struct AIAPIKeysResource: Sendable {
     /// - Returns: `true` when the API confirms the key was deleted.
     public func delete(id: String) async throws -> Bool {
         let response = try await http.delete(
-            path: "/ai/ai-api-key/\(id)", as: DeleteAIAPIKeyResponse.self)
+            path: "/ai/api-key/\(id)", as: DeleteAIAPIKeyResponse.self)
         return response.deleted
     }
 
     /// Rotates an AI API key value.
     ///
     /// - Parameter id: The AI API key identifier.
-    /// - Returns: The rotated AI API key including its plaintext value.
-    public func rotate(id: String) async throws -> Exoscale.AIAPIKeyWithValue {
-        try await http.post(
-            path: "/ai/ai-api-key/\(id)/rotate", as: Exoscale.AIAPIKeyWithValue.self)
+    /// - Returns: The rotated plaintext key value.
+    public func rotate(id: String) async throws -> String {
+        let response = try await http.post(
+            path: "/ai/api-key/\(id)/rotate", as: AIAPIKeyValueResponse.self)
+        return response.value
+    }
+
+    /// Reveals an AI API key's plaintext value.
+    public func reveal(id: String) async throws -> String {
+        let response = try await http.get(path: "/ai/api-key/\(id)/reveal", as: AIAPIKeyValueResponse.self)
+        return response.value
     }
 }

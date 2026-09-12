@@ -1,3 +1,5 @@
+import Foundation
+
 public extension Exoscale {
     /// Temporary credentials returned when assuming an IAM role.
     struct AssumedRoleCredentials: Codable, Sendable {
@@ -6,6 +8,7 @@ public extension Exoscale {
         public let orgID: String?
         public let roleID: String?
         public let secret: String?
+        public let expiresAt: Date?
 
         enum CodingKeys: String, CodingKey {
             case key
@@ -13,6 +16,7 @@ public extension Exoscale {
             case orgID = "org-id"
             case roleID = "role-id"
             case secret
+            case expiresAt = "expires-at"
         }
     }
 }

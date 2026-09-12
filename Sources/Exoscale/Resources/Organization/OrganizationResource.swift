@@ -2,6 +2,11 @@
 public struct OrganizationResource: Sendable {
     let http: Http.Client
 
+    /// Retrieves the organization's live balance (beta).
+    public func liveBalance() async throws -> Exoscale.LiveBalance {
+        try await http.get(path: "/live-balance", as: Exoscale.LiveBalance.self)
+    }
+
     init(http: Http.Client) {
         self.http = http
     }

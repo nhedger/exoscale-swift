@@ -1,3 +1,5 @@
+import Foundation
+
 public extension Exoscale {
     /// DNS domain record returned by the API.
     struct Record: Codable, Sendable {
@@ -20,14 +22,14 @@ public extension Exoscale {
             case spf = "SPF"
         }
 
-        public let updatedAt: String?
+        public let updatedAt: Date?
         public let content: String?
         public let name: String?
         public let type: RecordType?
         public let ttl: Int?
         public let priority: Int?
         public let id: String?
-        public let createdAt: String?
+        public let createdAt: Date?
         public let systemRecord: Bool?
 
         enum CodingKeys: String, CodingKey {

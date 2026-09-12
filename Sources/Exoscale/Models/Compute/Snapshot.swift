@@ -1,3 +1,5 @@
+import Foundation
+
 public extension Exoscale {
     /// Compute instance snapshot returned by the API.
     struct Snapshot: Codable, Sendable {
@@ -25,7 +27,7 @@ public extension Exoscale {
 
         public let id: String?
         public let name: String?
-        public let createdAt: String?
+        public let createdAt: Date?
         public let state: State?
         public let size: Int?
         public let export: Export?

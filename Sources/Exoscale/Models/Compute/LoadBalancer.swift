@@ -1,3 +1,5 @@
+import Foundation
+
 public extension Exoscale {
     /// Network load balancer returned by the API.
     struct LoadBalancer: Codable, Sendable {
@@ -124,7 +126,7 @@ public extension Exoscale {
         public let description: String?
         public let name: String?
         public let state: State?
-        public let createdAt: String?
+        public let createdAt: Date?
         public let ip: String?
         public let services: [Service]?
         public let labels: [String: String]?

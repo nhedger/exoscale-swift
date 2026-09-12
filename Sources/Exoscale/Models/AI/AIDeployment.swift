@@ -1,3 +1,5 @@
+import Foundation
+
 public extension Exoscale {
     /// AI deployment returned by the API.
     struct AIDeployment: Codable, Sendable {
@@ -19,7 +21,7 @@ public extension Exoscale {
         }
 
         public let gpuCount: Int?
-        public let updatedAt: String?
+        public let updatedAt: Date?
         public let deploymentURL: String?
         public let serviceLevel: String?
         public let inferenceEngineVersion: String?
@@ -29,9 +31,10 @@ public extension Exoscale {
         public let id: String?
         public let replicas: Int?
         public let stateDetails: String?
-        public let createdAt: String?
+        public let createdAt: Date?
         public let inferenceEngineParameters: [String]?
         public let model: ModelReference?
+        public let visibility: String?
 
         enum CodingKeys: String, CodingKey {
             case gpuCount = "gpu-count"
@@ -48,6 +51,7 @@ public extension Exoscale {
             case createdAt = "created-at"
             case inferenceEngineParameters = "inference-engine-parameters"
             case model
+            case visibility
         }
     }
 }

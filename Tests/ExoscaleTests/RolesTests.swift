@@ -23,7 +23,7 @@ func createRoleRequestEncodesRequestBody() throws {
         editable: true,
         labels: ["env": "prod"],
         policy: policy,
-        assumeRolePolicy: policy,
+        assumeRolePolicy: .init(rules: [.init(action: .allow, expression: "true", resources: ["*"])]),
         maxSessionTTL: 3600
     )
 
@@ -49,19 +49,13 @@ func listRolesResponseDecodesRoles() throws {
               "labels": { "env": "prod" },
               "permissions": ["bypass-governance-retention"],
               "assume-role-policy": {
-                "default-service-strategy": "allow",
-                "services": {
-                  "compute": {
-                    "type": "rules",
-                    "rules": [
-                      {
-                        "action": "allow",
-                        "expression": "true",
-                        "resources": ["*"]
-                      }
-                    ]
+                "rules": [
+                  {
+                    "action": "allow",
+                    "expression": "true",
+                    "resources": ["*"]
                   }
-                }
+                ]
               },
               "editable": true,
               "max-session-ttl": 3600,
@@ -85,7 +79,7 @@ func listRolesResponseDecodesRoles() throws {
     #expect(response.roles[0].id == "11111111-1111-1111-1111-111111111111")
     #expect(response.roles[0].name == "admin-role")
     #expect(response.roles[0].permissions == [.bypassGovernanceRetention])
-    #expect(response.roles[0].assumeRolePolicy?.defaultServiceStrategy == .allow)
+    #expect(response.roles[0].assumeRolePolicy?.rules?.first?.action == .allow)
     #expect(response.roles[0].policy?.defaultServiceStrategy == .deny)
     #expect(response.roles[0].editable == true)
     #expect(response.roles[0].maxSessionTTL == 3600)
@@ -109,16 +103,18 @@ func assumedRoleCredentialsDecodeTemporaryCredentials() throws {
           "name": "assumed-role-key",
           "org-id": "org-123",
           "role-id": "role-123",
-          "secret": "secret-value"
+          "secret": "secret-value",
+          "expires-at": "2026-09-12T12:00:00Z"
         }
         """.utf8
     )
 
-    let credentials = try JSONDecoder().decode(Exoscale.AssumedRoleCredentials.self, from: data)
+    let credentials = try Exoscale.jsonDecoder().decode(Exoscale.AssumedRoleCredentials.self, from: data)
 
     #expect(credentials.key == "EXOassumed")
     #expect(credentials.name == "assumed-role-key")
     #expect(credentials.orgID == "org-123")
     #expect(credentials.roleID == "role-123")
     #expect(credentials.secret == "secret-value")
+    #expect(credentials.expiresAt == Date(timeIntervalSince1970: 1789214400))
 }

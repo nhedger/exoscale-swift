@@ -42,15 +42,15 @@ func listAIAPIKeysResponseDecodesAIAPIKeys() throws {
         """.utf8
     )
 
-    let response = try JSONDecoder().decode(ListAIAPIKeysResponse.self, from: data)
+    let response = try Exoscale.jsonDecoder().decode(ListAIAPIKeysResponse.self, from: data)
 
     #expect(response.aiAPIKeys.count == 1)
-    #expect(response.aiAPIKeys[0].updatedAt == "2026-03-25T10:00:00Z")
+    #expect(response.aiAPIKeys[0].updatedAt == Date(timeIntervalSince1970: 1774432800))
     #expect(response.aiAPIKeys[0].name == "default-public-key")
     #expect(response.aiAPIKeys[0].scope == "public")
     #expect(response.aiAPIKeys[0].id == "11111111-1111-1111-1111-111111111111")
     #expect(response.aiAPIKeys[0].orgUUID == "22222222-2222-2222-2222-222222222222")
-    #expect(response.aiAPIKeys[0].createdAt == "2026-03-25T10:00:00Z")
+    #expect(response.aiAPIKeys[0].createdAt == Date(timeIntervalSince1970: 1774432800))
 }
 
 @Test("AIAPIKeyWithValue decodes API key value")
@@ -69,7 +69,7 @@ func aiAPIKeyWithValueDecodesAPIKeyValue() throws {
         """.utf8
     )
 
-    let apiKey = try JSONDecoder().decode(Exoscale.AIAPIKeyWithValue.self, from: data)
+    let apiKey = try Exoscale.jsonDecoder().decode(Exoscale.AIAPIKeyWithValue.self, from: data)
 
     #expect(apiKey.name == "default-public-key")
     #expect(apiKey.value == "sk_live_123")

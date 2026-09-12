@@ -28,11 +28,11 @@ func listDomainsResponseDecodesDomains() throws {
         """.utf8
     )
 
-    let response = try JSONDecoder().decode(ListDomainsResponse.self, from: data)
+    let response = try Exoscale.jsonDecoder().decode(ListDomainsResponse.self, from: data)
 
     #expect(response.domains.count == 1)
     #expect(response.domains[0].id == "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
-    #expect(response.domains[0].createdAt == "2026-04-27T10:00:00Z")
+    #expect(response.domains[0].createdAt == Date(timeIntervalSince1970: 1777284000))
     #expect(response.domains[0].unicodeName == "example.com")
 }
 

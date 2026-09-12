@@ -1,3 +1,5 @@
+import Foundation
+
 public extension Exoscale.DBaaS.Grafana {
     /// Grafana service returned by the API.
     struct Service: Codable, Sendable {
@@ -14,7 +16,7 @@ public extension Exoscale.DBaaS.Grafana {
         }
 
         public let description: String?
-        public let updatedAt: String?
+        public let updatedAt: Date?
         public let nodeCount: Int?
         public let connectionInfo: ConnectionInfo?
         public let nodeCPUCount: Int?
@@ -37,7 +39,7 @@ public extension Exoscale.DBaaS.Grafana {
         public let uri: String?
         public let uriParams: [String: Exoscale.JSONValue]?
         public let version: String?
-        public let createdAt: String?
+        public let createdAt: Date?
         public let plan: String?
         public let users: [User]?
 
@@ -121,7 +123,7 @@ public extension Exoscale.DBaaS.Kafka {
             public let username: String?
             public let password: String?
             public let accessCert: String?
-            public let accessCertExpiry: String?
+            public let accessCertExpiry: Date?
             public let accessKey: String?
 
             enum CodingKeys: String, CodingKey {
@@ -134,7 +136,7 @@ public extension Exoscale.DBaaS.Kafka {
             }
         }
 
-        public let updatedAt: String?
+        public let updatedAt: Date?
         public let authenticationMethods: AuthenticationMethods?
         public let nodeCount: Int?
         public let connectionInfo: ConnectionInfo?
@@ -164,7 +166,7 @@ public extension Exoscale.DBaaS.Kafka {
         public let uriParams: [String: Exoscale.JSONValue]?
         public let schemaRegistryEnabled: Bool?
         public let version: String?
-        public let createdAt: String?
+        public let createdAt: Date?
         public let plan: String?
         public let users: [User]?
 
@@ -210,7 +212,7 @@ public extension Exoscale.DBaaS.Kafka {
         public let username: String?
         public let password: String?
         public let accessCert: String?
-        public let accessCertExpiry: String?
+        public let accessCertExpiry: Date?
         public let accessKey: String?
 
         enum CodingKeys: String, CodingKey {
@@ -318,7 +320,7 @@ public extension Exoscale.DBaaS.MySQL {
             public let authentication: String?
         }
 
-        public let updatedAt: String?
+        public let updatedAt: Date?
         public let nodeCount: Int?
         public let connectionInfo: ConnectionInfo?
         public let backupSchedule: Exoscale.DBaaS.BackupSchedule?
@@ -337,13 +339,14 @@ public extension Exoscale.DBaaS.MySQL {
         public let notifications: [Exoscale.DBaaS.Notification]?
         public let components: [Exoscale.DBaaS.Component]?
         public let mysqlSettings: [String: Exoscale.JSONValue]?
+        public let binlogRetentionPeriod: Int?
         public let maintenance: Exoscale.DBaaS.Maintenance?
         public let diskSize: Int?
         public let nodeMemory: Int?
         public let uri: String?
         public let uriParams: [String: Exoscale.JSONValue]?
         public let version: String?
-        public let createdAt: String?
+        public let createdAt: Date?
         public let plan: String?
         public let users: [User]?
 
@@ -367,6 +370,7 @@ public extension Exoscale.DBaaS.MySQL {
             case notifications
             case components
             case mysqlSettings = "mysql-settings"
+            case binlogRetentionPeriod = "binlog-retention-period"
             case maintenance
             case diskSize = "disk-size"
             case nodeMemory = "node-memory"
@@ -473,7 +477,7 @@ public extension Exoscale.DBaaS.OpenSearch {
 
         public let description: String?
         public let maxIndexCount: Int?
-        public let updatedAt: String?
+        public let updatedAt: Date?
         public let nodeCount: Int?
         public let connectionInfo: ConnectionInfo?
         public let nodeCPUCount: Int?
@@ -499,7 +503,7 @@ public extension Exoscale.DBaaS.OpenSearch {
         public let opensearchSettings: [String: Exoscale.JSONValue]?
         public let uriParams: [String: Exoscale.JSONValue]?
         public let version: String?
-        public let createdAt: String?
+        public let createdAt: Date?
         public let plan: String?
         public let opensearchDashboards: Dashboards?
         public let users: [User]?
@@ -622,7 +626,7 @@ public extension Exoscale.DBaaS.Thanos {
             public let password: String?
         }
 
-        public let updatedAt: String?
+        public let updatedAt: Date?
         public let nodeCount: Int?
         public let connectionInfo: ConnectionInfo?
         public let nodeCPUCount: Int?
@@ -644,7 +648,7 @@ public extension Exoscale.DBaaS.Thanos {
         public let uri: String?
         public let uriParams: [String: Exoscale.JSONValue]?
         public let thanosSettings: [String: Exoscale.JSONValue]?
-        public let createdAt: String?
+        public let createdAt: Date?
         public let plan: String?
         public let users: [User]?
 
@@ -726,7 +730,7 @@ public extension Exoscale.DBaaS.Valkey {
             public let slave: [String]?
         }
 
-        public let updatedAt: String?
+        public let updatedAt: Date?
         public let nodeCount: Int?
         public let connectionInfo: ConnectionInfo?
         public let nodeCPUCount: Int?
@@ -749,7 +753,7 @@ public extension Exoscale.DBaaS.Valkey {
         public let uri: String?
         public let uriParams: [String: Exoscale.JSONValue]?
         public let version: String?
-        public let createdAt: String?
+        public let createdAt: Date?
         public let plan: String?
         public let users: [User]?
 

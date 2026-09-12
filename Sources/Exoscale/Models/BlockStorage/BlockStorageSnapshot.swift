@@ -1,3 +1,5 @@
+import Foundation
+
 public extension Exoscale {
     /// Block storage snapshot returned by the API.
     struct BlockStorageSnapshot: Codable, Sendable {
@@ -24,7 +26,7 @@ public extension Exoscale {
         public let name: String?
         public let size: Int?
         public let volumeSize: Int?
-        public let createdAt: String?
+        public let createdAt: Date?
         public let state: State?
         public let labels: [String: String]?
         public let blockStorageVolume: Exoscale.BlockStorageVolume.Reference?

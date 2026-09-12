@@ -1,3 +1,5 @@
+import Foundation
+
 public extension Exoscale {
     /// Instance template returned by the API.
     struct Template: Codable, Sendable {
@@ -27,7 +29,7 @@ public extension Exoscale {
         public let zones: [Exoscale.KnownZone]?
         public let url: String?
         public let version: String?
-        public let createdAt: String?
+        public let createdAt: Date?
         public let visibility: Visibility?
 
         enum CodingKeys: String, CodingKey {

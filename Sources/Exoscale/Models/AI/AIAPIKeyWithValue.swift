@@ -1,12 +1,14 @@
+import Foundation
+
 public extension Exoscale {
     /// AI API key including its plaintext value.
     struct AIAPIKeyWithValue: Codable, Sendable {
-        public let updatedAt: String?
+        public let updatedAt: Date?
         public let name: String?
         public let scope: String?
         public let id: String?
         public let orgUUID: String?
-        public let createdAt: String?
+        public let createdAt: Date?
         public let value: String?
 
         enum CodingKeys: String, CodingKey {

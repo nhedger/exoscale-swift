@@ -88,7 +88,7 @@ func listKMSKeysResponseDecodesKMSKeys() throws {
         """.utf8
     )
 
-    let response = try JSONDecoder().decode(ListKMSKeysResponse.self, from: data)
+    let response = try Exoscale.jsonDecoder().decode(ListKMSKeysResponse.self, from: data)
     let key = try #require(response.kmsKeys.first)
 
     #expect(key.zone == "ch-gva-2")
@@ -98,7 +98,7 @@ func listKMSKeysResponseDecodesKMSKeys() throws {
     #expect(key.usage == .encryptDecrypt)
     #expect(key.source == .exoscaleKMS)
     #expect(key.status == .enabled)
-    #expect(key.statusSince == "2026-04-27T10:00:00Z")
+    #expect(key.statusSince == Date(timeIntervalSince1970: 1777284000))
     #expect(key.material?.version == 2)
     #expect(key.material?.automatic == false)
     #expect(key.rotation?.manualCount == 1)
@@ -109,19 +109,19 @@ func listKMSKeysResponseDecodesKMSKeys() throws {
     #expect(key.replicas == ["de-fra-1"])
     #expect(key.replicasStatus?.first?.lastAppliedWatermark == 42)
     #expect(key.replicasStatus?.first?.lastFailure?.error == "temporary failure")
-    #expect(key.createdAt == "2026-04-27T09:00:00Z")
+    #expect(key.createdAt == Date(timeIntervalSince1970: 1777280400))
     #expect(key.revision?.seq == 3)
 }
 
 @Test("KMS key responses decode values")
 func kmsKeyResponsesDecodeValues() throws {
-    let rotationResponse = try JSONDecoder().decode(
+    let rotationResponse = try Exoscale.jsonDecoder().decode(
         KMSKeyRotationResponse.self,
         from: Data(
             #"{"rotation":{"manual-count":2,"automatic":true,"rotation-period":180,"next-at":"2026-10-27T09:00:00Z"}}"#.utf8
         )
     )
-    let rotationsResponse = try JSONDecoder().decode(
+    let rotationsResponse = try Exoscale.jsonDecoder().decode(
         ListKMSKeyRotationsResponse.self,
         from: Data(#"{"rotations":[{"version":3,"rotated-at":"2026-04-27T09:00:00Z","automatic":false}]}"#.utf8)
     )

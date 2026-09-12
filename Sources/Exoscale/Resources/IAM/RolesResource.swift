@@ -35,7 +35,7 @@ public struct RolesResource: Sendable {
         editable: Bool? = nil,
         labels: [String: String]? = nil,
         policy: Exoscale.IAMPolicy? = nil,
-        assumeRolePolicy: Exoscale.IAMPolicy? = nil,
+        assumeRolePolicy: Exoscale.IAMAssumeRolePolicy? = nil,
         maxSessionTTL: Int? = nil
     ) async throws -> Exoscale.Operation {
         let body = try JSONEncoder().encode(
@@ -76,14 +76,16 @@ public struct RolesResource: Sendable {
         description: String? = nil,
         permissions: [Exoscale.Role.Permission]? = nil,
         labels: [String: String]? = nil,
-        maxSessionTTL: Int? = nil
+        maxSessionTTL: Int? = nil,
+        assumeRolePolicy: Exoscale.IAMAssumeRolePolicy? = nil
     ) async throws -> Exoscale.Operation {
         let body = try JSONEncoder().encode(
             UpdateRoleRequest(
                 description: description,
                 permissions: permissions,
                 labels: labels,
-                maxSessionTTL: maxSessionTTL
+                maxSessionTTL: maxSessionTTL,
+                assumeRolePolicy: assumeRolePolicy
             )
         )
 
@@ -115,18 +117,17 @@ public struct RolesResource: Sendable {
     ///   - id: The IAM role identifier.
     ///   - policy: The IAM assume role policy.
     /// - Returns: The asynchronous operation returned by the API.
-    public func updateAssumeRolePolicy(id: String, policy: Exoscale.IAMPolicy) async throws -> Exoscale.Operation {
-        let body = try JSONEncoder().encode(policy)
-        return try await http.put(path: "/iam-role/\(id):assume-role-policy", body: body, as: Exoscale.Operation.self)
+    public func updateAssumeRolePolicy(id: String, policy: Exoscale.IAMAssumeRolePolicy) async throws -> Exoscale.Operation {
+        try await update(id: id, assumeRolePolicy: policy)
     }
 
     /// Assumes an IAM role and returns temporary credentials.
     ///
     /// - Parameters:
     ///   - targetRoleID: The target IAM role identifier.
-    ///   - ttl: Optional TTL in seconds for the generated access key.
+    ///   - ttl: Required positive TTL in seconds, within the target role's maximum.
     /// - Returns: The temporary credentials returned by the API.
-    public func assume(targetRoleID: String, ttl: Int? = nil) async throws -> Exoscale.AssumedRoleCredentials {
+    public func assume(targetRoleID: String, ttl: Int) async throws -> Exoscale.AssumedRoleCredentials {
         let body = try JSONEncoder().encode(AssumeRoleRequest(ttl: ttl))
         return try await http.post(
             path: "/iam-role/\(targetRoleID)/assume",

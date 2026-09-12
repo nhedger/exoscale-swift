@@ -10,12 +10,10 @@ public struct ModelsResource: Sendable {
 
     /// Lists AI models.
     ///
-    /// - Parameter visibility: Optional visibility filter.
     /// - Returns: The list of AI models returned by the API.
-    public func list(visibility: String? = nil) async throws -> [Exoscale.Model] {
+    public func list() async throws -> [Exoscale.Model] {
         let response = try await http.get(
             path: "/ai/model",
-            query: ["visibility": visibility],
             as: ListModelsResponse.self
         )
         return response.models
