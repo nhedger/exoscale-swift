@@ -118,5 +118,6 @@ func clientMapsAuthorizationResponseStatusCodes() {
             data: Data("Forbidden by role policy: missing permission".utf8)
         ) == Exoscale.ApiError.forbiddenByPolicy
     )
-    #expect(Http.Client.error(forResponseStatusCode: 404) == nil)
+    #expect(Http.Client.error(forResponseStatusCode: 404) == .httpError(statusCode: 404, body: Data()))
+    #expect(Http.Client.error(forResponseStatusCode: 200) == nil)
 }

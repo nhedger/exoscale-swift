@@ -1,4 +1,3 @@
-import Alamofire
 import Foundation
 
 enum Http {}
@@ -8,7 +7,8 @@ extension Http {
         let baseURL: URL
         let userAgent: String?
 
-        private let session: Session
+        private let session: URLSession
+        private let signer: SignRequest
 
         init(
             config: Exoscale.Config,
@@ -16,19 +16,12 @@ extension Http {
         ) {
             self.baseURL = config.apiEndpoint
             self.userAgent = config.userAgent
-            self.session = Session(
-                configuration: sessionConfiguration,
-                interceptor: Interceptor(
-                    adapters: [
-                        ApplyUserAgent(userAgent: config.userAgent),
-                        ApplyJSONContentType(),
-                        SignRequest(
-                            apiKey: config.apiKey,
-                            apiSecret: config.apiSecret
-                        ),
-                    ]
-                )
-            )
+            self.session = URLSession(configuration: sessionConfiguration)
+            self.signer = SignRequest(apiKey: config.apiKey, apiSecret: config.apiSecret)
+        }
+
+        deinit {
+            session.invalidateAndCancel()
         }
 
         private func requestData(
@@ -38,7 +31,8 @@ extension Http {
             body: Data? = nil,
             headers: [String: String] = [:]
         ) async throws -> Data {
-            let request = try makeRequest(
+            try Task.checkCancellation()
+            var request = try makeRequest(
                 method,
                 path: path,
                 query: query,
@@ -46,22 +40,33 @@ extension Http {
                 headers: headers
             )
 
-            let response = await session
-                .request(request)
-                .validate()
-                .serializingData()
-                .response
+            request = try ApplyUserAgent(userAgent: userAgent ?? "").adapt(request)
+            request = try ApplyJSONContentType().adapt(request)
+            if request.value(forHTTPHeaderField: "Accept") == nil {
+                request.setValue("application/json", forHTTPHeaderField: "Accept")
+            }
+            request = try signer.adapt(request)
 
-            if let error = response.error {
-                if let responseCode = error.responseCode,
-                   let exoscaleError = Self.error(forResponseStatusCode: responseCode, data: response.data) {
-                    throw exoscaleError
-                }
-
+            let (data, response) = try await session.data(for: request)
+            try Task.checkCancellation()
+            guard let response = response as? HTTPURLResponse else {
+                throw Exoscale.ApiError.invalidResponse
+            }
+            if let error = Self.error(forResponseStatusCode: response.statusCode, data: data) {
                 throw error
             }
 
-            return response.data ?? Data()
+            // Empty responses and omitted Content-Type headers are accepted; decoding
+            // still validates any response body against the requested model.
+            if !data.isEmpty, let contentType = response.value(forHTTPHeaderField: "Content-Type") {
+                let mimeType = contentType.components(separatedBy: ";")[0]
+                    .trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+                guard mimeType == "application/json"
+                    || (mimeType.hasPrefix("application/") && mimeType.hasSuffix("+json")) else {
+                    throw Exoscale.ApiError.unexpectedContentType(contentType)
+                }
+            }
+            return data
         }
 
         static func error(forResponseStatusCode statusCode: Int, data: Data? = nil) -> Exoscale.ApiError? {
@@ -76,8 +81,10 @@ extension Http {
                 } else {
                     .forbidden
                 }
-            default:
+            case 200..<300:
                 nil
+            default:
+                .httpError(statusCode: statusCode, body: data ?? Data())
             }
         }
 
@@ -86,6 +93,9 @@ extension Http {
             as type: Response.Type = Response.self,
             decoder: JSONDecoder = Exoscale.jsonDecoder()
         ) throws -> Response {
+            if data.isEmpty, let empty = EmptyResponse() as? Response {
+                return empty
+            }
             return try decoder.decode(type, from: data)
         }
 

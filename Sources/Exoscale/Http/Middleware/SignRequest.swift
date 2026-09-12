@@ -1,16 +1,15 @@
-import Alamofire
 import CryptoKit
 import Foundation
 
 /// Signs outgoing requests with Exoscale's `EXO2-HMAC-SHA256` authorization scheme.
-struct SignRequest: RequestInterceptor, Sendable {
+struct SignRequest: Sendable {
     let apiKey: String
     let apiSecret: String
     let expirationInterval: TimeInterval
 
     private let now: @Sendable () -> Date
 
-    /// Creates an interceptor that signs requests with the provided credentials.
+    /// Creates a signer using the provided credentials.
     ///
     /// - Parameters:
     ///   - apiKey: The Exoscale API key used to produce the authorization header.
@@ -27,27 +26,6 @@ struct SignRequest: RequestInterceptor, Sendable {
         self.apiSecret = apiSecret
         self.expirationInterval = expirationInterval
         self.now = now
-    }
-
-    func adapt(
-        _ urlRequest: URLRequest,
-        for session: Session,
-        completion: @escaping @Sendable (Result<URLRequest, any Error>) -> Void
-    ) {
-        do {
-            completion(.success(try adapt(urlRequest)))
-        } catch {
-            completion(.failure(error))
-        }
-    }
-
-    func retry(
-        _ request: Request,
-        for session: Session,
-        dueTo error: any Error,
-        completion: @escaping @Sendable (RetryResult) -> Void
-    ) {
-        completion(.doNotRetry)
     }
 
     func adapt(_ urlRequest: URLRequest) throws -> URLRequest {
@@ -83,7 +61,7 @@ struct SignRequest: RequestInterceptor, Sendable {
         signedQueryArguments: (names: [String], values: String),
         expires: Int
     ) -> String {
-        let method = (request.httpMethod ?? HTTPMethod.get.rawValue).uppercased()
+        let method = (request.httpMethod ?? "GET").uppercased()
         let percentEncodedPath = URLComponents(url: url, resolvingAgainstBaseURL: false)?.percentEncodedPath ?? url.path
         let path = percentEncodedPath.isEmpty ? "/" : percentEncodedPath
         let body = request.httpBody ?? Data()
