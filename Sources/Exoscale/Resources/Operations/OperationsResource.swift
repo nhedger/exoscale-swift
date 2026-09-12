@@ -38,7 +38,6 @@ public struct OperationsResource: Sendable {
     ///   - timeout: Maximum local wait duration.
     ///   - fetchInterval: Delay between operation status fetches.
     /// - Returns: The successful operation returned by the API.
-    @available(macOS 13.0, *)
     @discardableResult
     public func wait(
         for operation: Exoscale.Operation,

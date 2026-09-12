@@ -34,8 +34,6 @@ func operationDecodesOperationDetails() throws {
 
 @Test("Operation wait returns successful operations immediately")
 func operationWaitReturnsSuccessfulOperationsImmediately() async throws {
-    guard #available(macOS 13.0, *) else { return }
-
     let exoscale = try Exoscale(apiKey: "key", apiSecret: "secret")
     let operation = Exoscale.Operation(
         id: "99999999-9999-9999-9999-999999999999",
@@ -53,8 +51,6 @@ func operationWaitReturnsSuccessfulOperationsImmediately() async throws {
 
 @Test("Operation wait rejects failed operations immediately")
 func operationWaitRejectsFailedOperationsImmediately() async throws {
-    guard #available(macOS 13.0, *) else { return }
-
     let exoscale = try Exoscale(apiKey: "key", apiSecret: "secret")
     let operation = Exoscale.Operation(
         id: "99999999-9999-9999-9999-999999999999",
@@ -80,8 +76,6 @@ func operationWaitRejectsFailedOperationsImmediately() async throws {
 
 @Test("Operation wait requires an operation id before polling")
 func operationWaitRequiresOperationIDBeforePolling() async throws {
-    guard #available(macOS 13.0, *) else { return }
-
     let exoscale = try Exoscale(apiKey: "key", apiSecret: "secret")
     let operation = Exoscale.Operation(
         id: nil,
@@ -106,8 +100,6 @@ func operationWaitRequiresOperationIDBeforePolling() async throws {
 
 @Test("Operation wait times out locally")
 func operationWaitTimesOutLocally() async throws {
-    guard #available(macOS 13.0, *) else { return }
-
     let exoscale = try Exoscale(apiKey: "key", apiSecret: "secret")
     let operation = Exoscale.Operation(
         id: "99999999-9999-9999-9999-999999999999",

@@ -38,6 +38,28 @@ jobs:
       - name: Run tests
         run: swift test
 
+  ios:
+    name: Build (iOS ${{ matrix.platform }})
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - iOS
+          - iOS Simulator
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Build for iOS 16
+        run: >-
+          xcodebuild build
+          -scheme Exoscale
+          -destination 'generic/platform=${{ matrix.platform }}'
+          IPHONEOS_DEPLOYMENT_TARGET=16.0
+          CODE_SIGNING_ALLOWED=NO
+
   format:
     name: Format
     runs-on: macos-latest
