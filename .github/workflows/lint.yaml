@@ -1,0 +1,24 @@
+name: Lint
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  swiftlint:
+    name: SwiftLint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - run: docker run --rm -v "$PWD:/workspace" -w /workspace ghcr.io/realm/swiftlint:0.65.1 lint --strict
+
+  swiftformat:
+    name: SwiftFormat
+    # The macOS runner image comes with SwiftFormat installed.
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - run: swiftformat --version
+      - run: swiftformat --lint .

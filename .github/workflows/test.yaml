@@ -1,0 +1,83 @@
+name: Test
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    name: Linux (Swift ${{ matrix.swift }})
+    strategy:
+      fail-fast: false
+      matrix:
+        # From the minimum the package supports (swift-tools-version) to the latest release.
+        swift: ["6.2", "6.3", "6.4"]
+    runs-on: ubuntu-latest
+    container: swift:${{ matrix.swift }}-noble
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - run: swift --version
+      - run: swift test
+
+  macos:
+    name: macOS ${{ matrix.macos }} (Swift ${{ matrix.swift }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { swift: "6.2", macos: "26", runner: macos-26 }
+          - { swift: "6.3", macos: "26", runner: macos-26 }
+          # The runner image in public preview, with the latest macOS.
+          - { swift: "6.4", macos: "27", runner: xcode-27 }
+    runs-on: ${{ matrix.runner }}
+    env:
+      SWIFT: ${{ matrix.swift }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - name: Select Swift ${{ matrix.swift }}
+        run: .github/scripts/select-swift.sh "$SWIFT"
+      - name: Check the Swift version
+        run: |
+          swift --version
+          swift --version 2>&1 | grep -qE "Swift version ${SWIFT//./\\.}([. ]|$)"
+      - run: swift test
+
+  ios:
+    name: iOS ${{ matrix.ios }} (Swift ${{ matrix.swift }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { swift: "6.2", ios: "26", runner: macos-26 }
+          - { swift: "6.3", ios: "26", runner: macos-26 }
+          # The runner image in public preview, with the latest iOS.
+          - { swift: "6.4", ios: "27", runner: xcode-27 }
+    runs-on: ${{ matrix.runner }}
+    env:
+      SWIFT: ${{ matrix.swift }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - name: Select Swift ${{ matrix.swift }}
+        run: .github/scripts/select-swift.sh "$SWIFT"
+      - name: Check the Swift version
+        run: |
+          swift --version
+          swift --version 2>&1 | grep -qE "Swift version ${SWIFT//./\\.}([. ]|$)"
+      - name: Find an iPhone simulator running iOS ${{ matrix.ios }}
+        id: simulator
+        env:
+          IOS: ${{ matrix.ios }}
+        run: |
+          id=$(xcrun simctl list devices available \
+            | sed -n "/^-- iOS ${IOS}/,/^--/p" \
+            | grep iPhone \
+            | grep -m1 -oE '[0-9A-F]{8}(-[0-9A-F]{4}){3}-[0-9A-F]{12}' || true)
+          if [ -z "$id" ]; then
+            echo "::error::No iPhone simulator running iOS ${IOS} is available."
+            xcrun simctl list devices available
+            exit 1
+          fi
+          echo "id=$id" >> "$GITHUB_OUTPUT"
+      - run: xcodebuild test -scheme Exoscale -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.id }}"

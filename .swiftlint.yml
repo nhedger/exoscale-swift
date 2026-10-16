@@ -1,0 +1,25 @@
+included:
+  - Package.swift
+  - Sources
+  - Tests
+
+excluded:
+  - "**/.build"
+  - "**/.swiftpm"
+
+opt_in_rules:
+  - missing_docs
+
+# API acronyms, DNS record types, and range endpoints used by the SDK.
+identifier_name:
+  excluded:
+    - id
+    - a
+    - ah
+    - ai
+    - at
+    - ip
+    - mx
+    - ns
+    - pg
+    - to

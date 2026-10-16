@@ -1,0 +1,159 @@
+import Foundation
+
+/// Access to AI deployment API operations.
+public struct DeploymentsResource: Sendable {
+    let http: Http.Client
+
+    /// Lists AI deployments.
+    ///
+    /// - Parameter visibility: Optional visibility filter.
+    /// - Returns: The AI deployments returned by the API.
+    public func list(visibility: String? = nil) async throws -> [Exoscale.AIDeployment] {
+        try await http.execute(DeploymentsOperations.List(request: .init(visibility: visibility)))
+    }
+
+    /// Creates an AI deployment.
+    ///
+    /// - Parameters:
+    ///   - name: The deployment name.
+    ///   - modelID: The deployed model identifier.
+    ///   - gpuType: The GPU type family.
+    ///   - gpuCount: The number of GPUs per replica.
+    ///   - replicas: The number of replicas.
+    ///   - inferenceEngineVersion: Optional inference engine version.
+    ///   - inferenceEngineParameters: Optional extra inference engine CLI arguments.
+    /// - Returns: The asynchronous operation returned by the API.
+    public func create(
+        name: String,
+        modelID: String,
+        gpuType: String,
+        gpuCount: Int,
+        replicas: Int,
+        inferenceEngineVersion: String? = nil,
+        inferenceEngineParameters: [String]? = nil,
+        productName: String? = nil
+    ) async throws -> Exoscale.Operation {
+        try await create(
+            name: name, model: .init(id: modelID), gpuType: gpuType, gpuCount: gpuCount,
+            replicas: replicas, inferenceEngineVersion: inferenceEngineVersion,
+            inferenceEngineParameters: inferenceEngineParameters, productName: productName
+        )
+    }
+
+    /// Creates an AI deployment using a model reference containing either an ID or a name.
+    public func create(
+        name: String,
+        model: Exoscale.AIDeployment.ModelReference,
+        gpuType: String,
+        gpuCount: Int,
+        replicas: Int,
+        inferenceEngineVersion: String? = nil,
+        inferenceEngineParameters: [String]? = nil,
+        productName: String? = nil
+    ) async throws -> Exoscale.Operation {
+        try await http.execute(
+            DeploymentsOperations.Create(
+                request: .init(
+                    name: name,
+                    model: model,
+                    gpuType: gpuType,
+                    gpuCount: gpuCount,
+                    replicas: replicas,
+                    inferenceEngineVersion: inferenceEngineVersion,
+                    inferenceEngineParameters: inferenceEngineParameters,
+                    productName: productName
+                )
+            )
+        )
+    }
+
+    /// Retrieves an AI deployment by identifier.
+    ///
+    /// - Parameter id: The deployment identifier.
+    /// - Returns: The AI deployment returned by the API.
+    public func get(id: String) async throws -> Exoscale.AIDeployment {
+        try await http.execute(DeploymentsOperations.Get(request: .init(id: id)))
+    }
+
+    /// Updates an AI deployment.
+    ///
+    /// - Parameters:
+    ///   - id: The deployment identifier.
+    ///   - name: Optional deployment name.
+    ///   - inferenceEngineVersion: Optional inference engine version.
+    ///   - inferenceEngineParameters: Optional extra inference engine CLI arguments.
+    /// - Returns: The asynchronous operation returned by the API.
+    public func update(
+        id: String,
+        name: String? = nil,
+        inferenceEngineVersion: String? = nil,
+        inferenceEngineParameters: [String]? = nil
+    ) async throws -> Exoscale.Operation {
+        try await http.execute(
+            DeploymentsOperations.Update(
+                request: .init(
+                    id: id,
+                    name: name,
+                    inferenceEngineVersion: inferenceEngineVersion,
+                    inferenceEngineParameters: inferenceEngineParameters
+                )
+            )
+        )
+    }
+
+    /// Deletes an AI deployment.
+    ///
+    /// - Parameter id: The deployment identifier.
+    /// - Returns: The asynchronous operation returned by the API.
+    public func delete(id: String) async throws -> Exoscale.Operation {
+        try await http.execute(DeploymentsOperations.Delete(request: .init(id: id)))
+    }
+
+    /// Reveals an AI deployment inference endpoint API key.
+    ///
+    /// - Parameter id: The deployment identifier.
+    /// - Returns: The API key returned by the API.
+    public func revealAPIKey(id: String) async throws -> String {
+        try await http.execute(DeploymentsOperations.RevealAPIKey(request: .init(id: id)))
+    }
+
+    /// Retrieves AI deployment logs.
+    ///
+    /// - Parameters:
+    ///   - id: The deployment identifier.
+    ///   - stream: Optional streaming flag.
+    ///   - tail: Optional number of log lines to return.
+    /// - Returns: The deployment log entries returned by the API.
+    public func logs(
+        id: String,
+        stream: Bool? = nil,
+        tail: Int? = nil
+    ) async throws -> [Exoscale.AIDeploymentLogEntry] {
+        try await http.execute(DeploymentsOperations.Logs(request: .init(id: id, stream: stream, tail: tail)))
+    }
+
+    /// Scales an AI deployment.
+    ///
+    /// - Parameters:
+    ///   - id: The deployment identifier.
+    ///   - replicas: The target replica count.
+    /// - Returns: The asynchronous operation returned by the API.
+    public func scale(id: String, replicas: Int) async throws -> Exoscale.Operation {
+        try await http.execute(DeploymentsOperations.Scale(request: .init(id: id, replicas: replicas)))
+    }
+
+    /// Retrieves inference engine parameter definitions.
+    ///
+    /// - Parameter version: Optional inference engine version filter.
+    /// - Returns: The parameter definitions returned by the API.
+    public func inferenceEngineParameters(version: String? = nil) async throws -> [Exoscale.InferenceEngineParameter] {
+        try await http.execute(DeploymentsOperations.InferenceEngineParameters(request: .init(version: version)))
+    }
+
+    /// Lists available AI instance types.
+    ///
+    /// - Returns: The AI instance types returned by the API.
+    public func listInstanceTypes() async throws -> [Exoscale.AIInstanceType] {
+        try await http.execute(DeploymentsOperations.ListInstanceTypes(request: .init()))
+    }
+}

@@ -1,0 +1,24 @@
+import Foundation
+
+/// Request body for creating an AI deployment.
+struct CreateDeploymentBody: Encodable, Sendable {
+    let gpuCount: Int
+    let inferenceEngineVersion: String?
+    let name: String
+    let gpuType: String
+    let replicas: Int
+    let inferenceEngineParameters: [String]?
+    let model: Exoscale.AIDeployment.ModelReference
+    var productName: String?
+
+    enum CodingKeys: String, CodingKey {
+        case gpuCount = "gpu-count"
+        case inferenceEngineVersion = "inference-engine-version"
+        case name
+        case gpuType = "gpu-type"
+        case replicas
+        case inferenceEngineParameters = "inference-engine-parameters"
+        case model
+        case productName = "product-name"
+    }
+}
