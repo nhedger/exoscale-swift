@@ -96,8 +96,13 @@ public extension Exoscale {
         /// - Parameters:
         ///   - from: The start of the period.
         ///   - to: The end of the period.
+        ///
+        /// A period without usage, which the API answers with an empty body or `null`, gives an
+        /// empty report.
         public func report(from: String? = nil, to: String? = nil) async throws -> ImpactReport {
-            try await client.send(.get, "/environmental-impact/report", query: ["from": from, "to": to])
+            let data = try await client.data(.get, "/environmental-impact/report", query: ["from": from, "to": to])
+            guard !data.isEmpty else { return ImpactReport() }
+            return try JSON.decoder().decode(ImpactReport?.self, from: data) ?? ImpactReport()
         }
 
         /// Estimates the impact of one unit of usage of the products matching a SKU.

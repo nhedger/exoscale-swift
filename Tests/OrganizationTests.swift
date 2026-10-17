@@ -100,6 +100,14 @@ func decodeImpactReportWithNullResources() async throws {
     #expect(report.zones["ch-gva-2"]?.resources["compute"]?.resources == ["micro": micro])
 }
 
+@Test("Impact reports of a period without usage are empty", arguments: ["", "null"])
+func decodeEmptyImpactReport(body: String) async throws {
+    let report = try await decode(body, from: "/environmental-impact/report") {
+        try await $0.environmentalImpact.report(from: "2026-10-01", to: "2026-10-18")
+    }
+    #expect(report == Exoscale.ImpactReport())
+}
+
 @Test("Impact estimates are keyed by SKU, then by indicator")
 func decodeImpactEstimate() async throws {
     let stub =
