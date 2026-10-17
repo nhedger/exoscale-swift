@@ -39,6 +39,17 @@ public extension Exoscale {
                 self.impact = impact
                 self.resources = resources
             }
+
+            /// A zone whose `impact` or `resources` is missing or `null` is read as having none.
+            public init(from decoder: Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                impact = try container.decodeIfPresent([String: ImpactValue].self, forKey: .impact) ?? [:]
+                resources = try container.decodeIfPresent([String: ResourceImpact].self, forKey: .resources) ?? [:]
+            }
+
+            enum CodingKeys: String, CodingKey {
+                case impact, resources
+            }
         }
 
         /// The usage and impact of one level of the catalog, from a product down to a single SKU.
@@ -59,6 +70,19 @@ public extension Exoscale {
                 self.impact = impact
                 self.usage = usage
                 self.resources = resources
+            }
+
+            /// A single SKU comes with `resources` set to `null` rather than empty, which is read as
+            /// having none, as is a missing or `null` `impact`.
+            public init(from decoder: Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                impact = try container.decodeIfPresent([String: ImpactValue].self, forKey: .impact) ?? [:]
+                usage = try container.decode(ImpactValue.self, forKey: .usage)
+                resources = try container.decodeIfPresent([String: ResourceImpact].self, forKey: .resources) ?? [:]
+            }
+
+            enum CodingKeys: String, CodingKey {
+                case impact, usage, resources
             }
         }
     }

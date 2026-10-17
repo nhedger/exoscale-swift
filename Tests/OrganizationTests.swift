@@ -86,6 +86,20 @@ func decodeImpactReport() async throws {
     ))
 }
 
+@Test("Impact reports read a null catalog level as empty")
+func decodeImpactReportWithNullResources() async throws {
+    let usage = #"{"unit":"hours","value":720}"#
+    let report = try await decode(
+        #"{"impact":{},"zones":{"ch-gva-2":{"impact":{},"resources":{"compute":{"impact":{},"usage":"#
+            + usage + #","resources":{"micro":{"impact":null,"usage":"# + usage + #","resources":null}}}}}}}"#,
+        from: "/environmental-impact/report"
+    ) { try await $0.environmentalImpact.report(from: "2026-10-01", to: "2026-10-18") }
+
+    let hours = Exoscale.ImpactValue(unit: "hours", value: 720)
+    let micro = Exoscale.ImpactReport.ResourceImpact(usage: hours)
+    #expect(report.zones["ch-gva-2"]?.resources["compute"]?.resources == ["micro": micro])
+}
+
 @Test("Impact estimates are keyed by SKU, then by indicator")
 func decodeImpactEstimate() async throws {
     let stub =
