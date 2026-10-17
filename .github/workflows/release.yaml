@@ -1,0 +1,110 @@
+name: Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Pre-release tests
+    uses: ./.github/workflows/test.yaml
+
+  lint:
+    name: Pre-release lint
+    uses: ./.github/workflows/lint.yaml
+
+  changelog:
+    name: Generate changelog
+    needs: [test, lint]
+    outputs:
+      tag: ${{ steps.version.outputs.tag }}
+      version: ${{ steps.version.outputs.version }}
+    permissions:
+      contents: read
+      pull-requests: read
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Set up git-cliff
+        uses: taiki-e/install-action@1168f6810a3cb30a3514bf5756a3b7f0422c6df8 # v2.87.28
+        with:
+          tool: git-cliff@2.13.0
+      - name: Compute new version
+        id: version
+        run: |
+          VERSION=$(git cliff --config .github/changelog.cliff.toml --bumped-version | tr -d 'v')
+          if [ -z "$VERSION" ]; then
+            echo "::error::git-cliff could not determine the next version."
+            exit 1
+          fi
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate full changelog
+        run: |
+          git cliff \
+            --config .github/changelog.cliff.toml \
+            --tag "${{ steps.version.outputs.tag }}" \
+            --output CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate release notes
+        run: |
+          git cliff \
+            --config .github/release-notes.cliff.toml \
+            --unreleased \
+            --tag "${{ steps.version.outputs.tag }}" \
+            --strip all \
+            --output RELEASE_NOTES.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload changelog artifacts
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: changelog
+          path: |
+            CHANGELOG.md
+            RELEASE_NOTES.md
+
+  release:
+    name: Release
+    needs: [changelog]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          ref: main
+      - name: Download changelog artifacts
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: changelog
+      - name: Set git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Create release commit
+        run: |
+          git add CHANGELOG.md
+          git commit -m "chore(release): ${{ needs.changelog.outputs.tag }}"
+          git push origin main
+      # Swift Package Manager resolves exact semantic version tags only, so unlike actions there
+      # are no moving major and minor tags.
+      - name: Create version tag
+        run: |
+          TAG="${{ needs.changelog.outputs.tag }}"
+          git tag -a "$TAG" -m "Release $TAG"
+          git push origin "$TAG"
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+        with:
+          tag_name: ${{ needs.changelog.outputs.tag }}
+          make_latest: true
+          body_path: RELEASE_NOTES.md

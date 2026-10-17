@@ -1,0 +1,39 @@
+included:
+  - Package.swift
+  - Sources
+  - Tests
+
+excluded:
+  - "**/.build"
+  - "**/.swiftpm"
+
+opt_in_rules:
+  - missing_docs
+
+# API acronyms, DNS record types, and range endpoints used by the SDK.
+identifier_name:
+  excluded:
+    - id
+    - a
+    - ah
+    - ai
+    - at
+    - ip
+    - mx
+    - ns
+    - pg
+    - to
+
+# Models live in the Exoscale namespace, so a model's nested types and coding keys sit two or three
+# levels deep, as in Exoscale.Instance.VPCAttachment.Subnet.
+nesting:
+  type_level: 3
+
+# The AI namespace is named after the product.
+type_name:
+  excluded:
+    - AI
+
+# API methods take one parameter per field an endpoint requires.
+function_parameter_count:
+  warning: 10

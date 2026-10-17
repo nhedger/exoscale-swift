@@ -1,0 +1,20 @@
+name: Integrate
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test
+    uses: ./.github/workflows/test.yaml
+
+  lint:
+    name: Lint
+    uses: ./.github/workflows/lint.yaml

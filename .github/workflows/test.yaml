@@ -1,0 +1,98 @@
+name: Test
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+# Tests every Swift version from the minimum the package supports (swift-tools-version) to the
+# latest release. On macOS and iOS, each version runs on the runner image whose Xcode ships it.
+
+jobs:
+  linux:
+    name: Linux (Swift ${{ matrix.swift }})
+    strategy:
+      fail-fast: false
+      matrix:
+        swift: ["6.2", "6.3", "6.4"]
+        runner: [ubuntu-24.04]
+    runs-on: ${{ matrix.runner }}
+    env: &env
+      SWIFT: ${{ matrix.swift }}
+    steps:
+      - &checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - uses: nhedger/use-swift@acdff2200f20b9c52477a0f4aaae54ef9fab0b00 # main
+        with:
+          version: ${{ matrix.swift }}
+      - &check-version
+        name: Check the Swift version
+        run: |
+          swift --version
+          swift --version 2>&1 | grep -qE "Swift version ${SWIFT//./\\.}([. ]|$)"
+      - &cache
+        name: Cache the build
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .build
+          key: ${{ matrix.runner }}-swift-${{ matrix.swift }}-${{ hashFiles('Package.resolved') }}
+          restore-keys: ${{ matrix.runner }}-swift-${{ matrix.swift }}-
+      - &test
+        run: swift test
+
+  macos:
+    name: macOS (Swift ${{ matrix.swift }})
+    strategy:
+      fail-fast: false
+      matrix: &apple-matrix
+        include:
+          - { swift: "6.2", runner: macos-26 }
+          - { swift: "6.3", runner: macos-26 }
+          # The runner image in public preview, with Xcode 27.
+          - { swift: "6.4", runner: xcode-27 }
+    runs-on: ${{ matrix.runner }}
+    env: *env
+    steps:
+      - *checkout
+      - &select-xcode
+        name: Select an Xcode with Swift ${{ matrix.swift }}
+        run: .github/scripts/select-xcode.sh "$SWIFT"
+      - *check-version
+      - *cache
+      - *test
+
+  ios:
+    name: iOS (Swift ${{ matrix.swift }})
+    strategy:
+      fail-fast: false
+      matrix: *apple-matrix
+    runs-on: ${{ matrix.runner }}
+    env: *env
+    steps:
+      - *checkout
+      - *select-xcode
+      - *check-version
+      - name: Find the newest iPhone simulator
+        id: simulator
+        run: |
+          id=$(xcrun simctl list devices available --json | jq -r '
+            .devices | to_entries
+            | map(select(.key | contains("SimRuntime.iOS-")))
+            | sort_by(.key | capture("iOS-(?<v>[0-9-]+)$").v | split("-") | map(tonumber))
+            | map(.value[] | select(.name | startswith("iPhone")))
+            | last | .udid // empty')
+          if [ -z "$id" ]; then
+            echo "::error::No iPhone simulator is available."
+            xcrun simctl list devices available
+            exit 1
+          fi
+          xcrun simctl list devices available | grep "$id"
+          echo "id=$id" >> "$GITHUB_OUTPUT"
+      - name: Cache the build
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .build/xcode
+          key: ${{ matrix.runner }}-ios-swift-${{ matrix.swift }}-${{ hashFiles('Package.resolved') }}
+          restore-keys: ${{ matrix.runner }}-ios-swift-${{ matrix.swift }}-
+      - run: xcodebuild test -scheme Exoscale -derivedDataPath .build/xcode -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.id }}"

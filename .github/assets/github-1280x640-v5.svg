@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+<title>Exoscale for Swift</title>
+<desc>Official Exoscale and Swift logos, visually balanced side by side above a centered title.</desc>
+<rect width="1280" height="640" fill="#F5F3EF"/>
+<g transform="translate(0 0)">
+<svg x="332.67270912743504" y="49.5300579115235" width="334.9895713164464" height="334.9895713164464"><svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 68.03 68.03"><defs><style>.cls-1{fill:#da291c;}</style></defs><title>Artboard 1</title><polygon class="cls-1" points="34.02 13.31 11.27 52.72 14.52 52.72 34.02 18.94 34.02 24.57 17.77 52.72 21.02 52.72 34.02 30.2 34.02 35.83 24.27 52.72 27.52 52.72 34.02 41.46 34.02 47.09 30.77 52.72 34.02 52.72 34.02 52.72 56.77 52.72 34.02 13.31"/></svg></svg>
+<g transform="translate(707.7234468937876 120) scale(1.7376883833642782)"><svg enable-background="new -252 343.9 106.1 106.1" height="106.1" viewBox="-252 343.9 106.1 106.1" width="106.1" xmlns="http://www.w3.org/2000/svg"><path d="m-145.9 373.3c0-1.1 0-2.1 0-3.2-.1-2.3-.2-4.7-.6-7s-1.1-4.5-2.2-6.6-2.4-4-4.1-5.6c-1.7-1.7-3.6-3-5.6-4.1-2.1-1.1-4.3-1.8-6.6-2.2s-4.6-.6-7-.6c-1.1 0-2.1 0-3.2 0-1.3 0-2.5 0-3.8 0h-28.1-11.6c-1.3 0-2.5 0-3.8 0-1.1 0-2.1 0-3.2 0-.6 0-1.2 0-1.7.1-1.7.1-3.5.2-5.2.5s-3.4.8-5 1.4c-.5.2-1.1.5-1.6.7-1.6.8-3 1.8-4.4 2.9-.4.4-.9.8-1.3 1.2-1.7 1.7-3 3.6-4.1 5.6-1.1 2.1-1.8 4.3-2.2 6.6s-.5 4.6-.6 7v3.2 3.8 17.3 22.4 3.8 3.2c.1 2.3.2 4.7.6 7s1.1 4.5 2.2 6.6 2.4 4 4.1 5.6c1.7 1.7 3.6 3 5.6 4.1 2.1 1.1 4.3 1.8 6.6 2.2s4.6.6 7 .6h3.2 3.8 39.7 3.8 3.2c2.3-.1 4.7-.2 7-.6s4.5-1.1 6.6-2.2 4-2.4 5.6-4.1c1.7-1.7 3-3.6 4.1-5.6 1.1-2.1 1.8-4.3 2.2-6.6s.6-4.6.6-7c0-1.1 0-2.1 0-3.2 0-1.3 0-2.5 0-3.8v-39.7c-0-1.2-0-2.4-0-3.7z" fill="#f05138"/><path d="m-168 409.4c.1-.4.2-.8.3-1.2 4.4-17.5-6.3-38.3-24.5-49.2 8 10.8 11.5 23.9 8.4 35.3-.3 1-.6 2-1 3-.4-.3-.9-.6-1.6-.9 0 0-18.1-11.2-37.7-30.9-.5-.5 10.5 15.7 22.9 28.8-5.9-3.3-22.2-15.2-32.6-24.6 1.3 2.1 2.8 4.2 4.4 6.1 8.6 11 19.9 24.5 33.4 34.9-9.5 5.8-22.9 6.3-36.2 0-3.3-1.5-6.4-3.4-9.3-5.5 5.6 9 14.3 16.8 24.9 21.4 12.6 5.4 25.2 5.1 34.5.1s.1 0 .1-.1c.4-.2.8-.5 1.2-.7 4.5-2.3 13.3-4.6 18.1 4.6 1.4 2.1 3.9-9.9-5.3-21.1z" fill="#fff"/></svg></g>
+<g fill="#171717" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+<text x="640" y="429" font-size="92" font-weight="700" letter-spacing="-3.5">Exoscale for Swift</text>
+<text x="640" y="482" font-size="30" font-weight="400" letter-spacing="-0.6">Swift SDK for the Exoscale API</text>
+</g>
+<text x="640" y="537" text-anchor="middle" fill="#454545" font-family="SFMono-Regular, Menlo, monospace" font-size="22" letter-spacing="-0.2">nhedger/exoscale-swift</text>
+</g>
+</svg>
