@@ -30,7 +30,13 @@ final class S3Client: Sendable {
 
     /// Sends a request to a bucket and returns the response body.
     @discardableResult
-    func send(_ method: HTTPClient.Method, bucket: String) async throws -> Data {
+    func send(
+        _ method: HTTPClient.Method,
+        bucket: String,
+        query: [String: String] = [:],
+        body: Data? = nil,
+        headers: [String: String] = [:]
+    ) async throws -> Data {
         let path: Path = "/\(bucket)"
         if let component = path.invalidComponent {
             throw Exoscale.ClientError.invalidPathComponent(component)
@@ -38,9 +44,19 @@ final class S3Client: Sendable {
         try Task.checkCancellation()
         var components = URLComponents(url: endpoint, resolvingAgainstBaseURL: false)!
         components.percentEncodedPath = path.encoded
+        if !query.isEmpty {
+            // Encoded as Signature Version 4 expects: only unreserved characters are left as is.
+            components.percentEncodedQueryItems = query
+                .map { URLQueryItem(name: Self.escape($0.key), value: Self.escape($0.value)) }
+                .sorted { $0.name < $1.name }
+        }
         var request = URLRequest(url: components.url!)
         request.httpMethod = method.rawValue
+        request.httpBody = body
         request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
+        for (name, value) in headers {
+            request.setValue(value, forHTTPHeaderField: name)
+        }
 
         let (data, response) = try await session.data(for: signer.sign(request))
         try Task.checkCancellation()
@@ -51,6 +67,15 @@ final class S3Client: Sendable {
             throw Exoscale.S3Error(statusCode: response.statusCode, body: data)
         }
         return data
+    }
+
+    /// RFC 3986 unreserved characters.
+    private static let unreserved = CharacterSet(
+        charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~"
+    )
+
+    private static func escape(_ value: String) -> String {
+        value.addingPercentEncoding(withAllowedCharacters: unreserved)!
     }
 }
 

@@ -16,7 +16,8 @@ struct S3Signer: Sendable {
     static let emptyPayloadHash = hex(SHA256.hash(data: Data()))
 
     /// Returns `request` with its `x-amz-date`, `x-amz-content-sha256` and `Authorization` headers.
-    /// The headers signed are `Host`, any `Range` and `Content-Type`, and every `x-amz-` header.
+    /// The headers signed are `Host`, any `Range`, `Content-Type` and `Content-MD5`, and every
+    /// `x-amz-` header.
     func sign(_ request: URLRequest, now: Date = Date()) -> URLRequest {
         var signed = request
         // Requests are built from a valid base URL, so they always have a URL.
@@ -29,7 +30,7 @@ struct S3Signer: Sendable {
         var headers = ["host": Self.host(of: url)]
         for (name, value) in signed.allHTTPHeaderFields ?? [:] {
             let name = name.lowercased()
-            if name.hasPrefix("x-amz-") || name == "range" || name == "content-type" {
+            if name.hasPrefix("x-amz-") || ["range", "content-type", "content-md5"].contains(name) {
                 headers[name] = value.trimmingCharacters(in: .whitespaces)
             }
         }

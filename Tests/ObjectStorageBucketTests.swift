@@ -1,3 +1,4 @@
+import Crypto
 @testable import Exoscale
 import Foundation
 import Testing
@@ -67,4 +68,58 @@ func refusesInvalidBucketNames() async throws {
         try await stub.exoscale.objectStorage.createBucket("..")
     }
     #expect(stub.requests.isEmpty)
+}
+
+@Test("Empties a bucket of every object version and delete marker, page by page")
+func emptiesBuckets() async throws {
+    let xml = ["Content-Type": "application/xml"]
+    let stub = try Stub(
+        StubResponse(headers: xml, body: """
+        <ListVersionsResult><Name>assets</Name><IsTruncated>true</IsTruncated>
+        <Version><Key>a &amp; b.txt</Key><VersionId>v1</VersionId></Version>
+        <Version><Key>logo.png</Key><VersionId>null</VersionId></Version>
+        </ListVersionsResult>
+        """),
+        StubResponse(headers: xml, body: "<DeleteResult></DeleteResult>"),
+        StubResponse(headers: xml, body: """
+        <ListVersionsResult><IsTruncated>false</IsTruncated>
+        <DeleteMarker><Key>old.txt</Key><VersionId>m1</VersionId></DeleteMarker>
+        </ListVersionsResult>
+        """),
+        StubResponse(headers: xml, body: "<DeleteResult></DeleteResult>")
+    )
+
+    let deleted = try await stub.exoscale.objectStorage.emptyBucket("assets")
+
+    #expect(deleted == 3)
+    let requests = stub.requests
+    #expect(requests.map(\.httpMethod) == ["GET", "POST", "GET", "POST"])
+    #expect(requests[0].url?.query == "max-keys=1000&versions=")
+    #expect(requests[1].url?.query == "delete=")
+    let body = try #require(requests[1].httpBody.map { String(decoding: $0, as: UTF8.self) })
+    #expect(body == """
+    <Delete><Quiet>true</Quiet><Object><Key>a &amp; b.txt</Key><VersionId>v1</VersionId></Object>\
+    <Object><Key>logo.png</Key></Object></Delete>
+    """)
+    let md5 = Data(Insecure.MD5.hash(data: Data(body.utf8))).base64EncodedString()
+    #expect(requests[1].value(forHTTPHeaderField: "Content-MD5") == md5)
+    #expect(requests[1].value(forHTTPHeaderField: "Authorization")?.contains("content-md5") == true)
+}
+
+@Test("Reports objects that couldn't be deleted")
+func reportsUndeletedObjects() async throws {
+    let xml = ["Content-Type": "application/xml"]
+    let stub = try Stub(
+        StubResponse(headers: xml, body: """
+        <ListVersionsResult><IsTruncated>false</IsTruncated><Version><Key>locked.txt</Key></Version></ListVersionsResult>
+        """),
+        StubResponse(headers: xml, body: """
+        <DeleteResult><Error><Key>locked.txt</Key><Code>AccessDenied</Code><Message>Access Denied</Message></Error></DeleteResult>
+        """)
+    )
+
+    let error = await #expect(throws: Exoscale.S3Error.self) {
+        try await stub.exoscale.objectStorage.emptyBucket("assets")
+    }
+    #expect(error?.code == "AccessDenied")
 }
