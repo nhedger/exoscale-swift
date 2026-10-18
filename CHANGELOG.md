@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.2.0 - 2026-10-18
+
+
+### ✨ Features
+
+* count a bucket's objects by [@nhedger](https://github.com/nhedger) ([36a24ec](https://github.com/nhedger/exoscale-swift/commit/36a24ecf8965ef083228c4dd00ccc6ed74db4950))
+  objectCount lists a bucket 1,000 objects at a time with ListObjectsV2 and
+  counts them, stopping at an optional limit so large buckets don't take
+  thousands of requests.
+* report progress while emptying buckets by [@nhedger](https://github.com/nhedger) ([55e2db4](https://github.com/nhedger/exoscale-swift/commit/55e2db4d4f546b10ff56ce65d6e9892683f58d6f))
+  emptyBucket takes an optional callback, called after each batch with how
+  many object versions and delete markers were deleted so far.
+* empty buckets by [@nhedger](https://github.com/nhedger) ([4cbdc58](https://github.com/nhedger/exoscale-swift/commit/4cbdc58e11f09dc0d3c6280d73e0135449a74337))
+  Lists a bucket's object versions and delete markers and deletes them 1,000
+  at a time with DeleteObjects, so a bucket with objects, or one that had
+  versioning, can then be deleted. Objects the API refuses to delete are
+  reported as an S3Error.
+* create and delete buckets by [@nhedger](https://github.com/nhedger) ([07f8dea](https://github.com/nhedger/exoscale-swift/commit/07f8deacc0f643c60b2a008843f92466000821b4))
+  Buckets are made through the S3-compatible API of Simple Object Storage,
+  which signs requests with AWS Signature Version 4 instead of the
+  EXO2-HMAC-SHA256 scheme of the main API. A small S3 client sends them to
+  the zone's sos endpoint and reads S3's XML errors into S3Error.
+
+
+
+### 🤝 Contributors
+* @nhedger
+
+**Comparison**: https://github.com/nhedger/exoscale-swift/compare/v0.1.1...v0.2.0
+
 ## v0.1.1 - 2026-10-17
 
 
@@ -19,6 +49,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 
 ### 🤝 Contributors
+* @github-actions[bot]
 * @nhedger
 
 **Comparison**: https://github.com/nhedger/exoscale-swift/compare/v0.1.0...v0.1.1
