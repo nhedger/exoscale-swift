@@ -50,7 +50,8 @@ func createsAndDeletesBuckets() async throws {
 func readsS3Errors() async throws {
     let stub = try Stub(StubResponse(statusCode: 409, headers: ["Content-Type": "application/xml"], body: """
     <?xml version="1.0" encoding="UTF-8"?>
-    <Error><Code>BucketNotEmpty</Code><Message>The bucket you tried to delete is not empty</Message><BucketName>assets</BucketName></Error>
+    <Error><Code>BucketNotEmpty</Code><Message>The bucket you tried to delete is not empty</Message>\
+    <BucketName>assets</BucketName></Error>
     """))
 
     let error = await #expect(throws: Exoscale.S3Error.self) {
@@ -100,7 +101,7 @@ func emptiesBuckets() async throws {
     #expect(requests.map(\.httpMethod) == ["GET", "POST", "GET", "POST"])
     #expect(requests[0].url?.query == "max-keys=1000&versions=")
     #expect(requests[1].url?.query == "delete=")
-    let body = try #require(requests[1].httpBody.map { String(decoding: $0, as: UTF8.self) })
+    let body = try #require(requests[1].httpBody.flatMap { String(bytes: $0, encoding: .utf8) })
     #expect(body == """
     <Delete><Quiet>true</Quiet><Object><Key>a &amp; b.txt</Key><VersionId>v1</VersionId></Object>\
     <Object><Key>logo.png</Key></Object></Delete>
@@ -115,10 +116,12 @@ func reportsUndeletedObjects() async throws {
     let xml = ["Content-Type": "application/xml"]
     let stub = try Stub(
         StubResponse(headers: xml, body: """
-        <ListVersionsResult><IsTruncated>false</IsTruncated><Version><Key>locked.txt</Key></Version></ListVersionsResult>
+        <ListVersionsResult><IsTruncated>false</IsTruncated>\
+        <Version><Key>locked.txt</Key></Version></ListVersionsResult>
         """),
         StubResponse(headers: xml, body: """
-        <DeleteResult><Error><Key>locked.txt</Key><Code>AccessDenied</Code><Message>Access Denied</Message></Error></DeleteResult>
+        <DeleteResult><Error><Key>locked.txt</Key><Code>AccessDenied</Code>\
+        <Message>Access Denied</Message></Error></DeleteResult>
         """)
     )
 

@@ -98,7 +98,7 @@ public extension Exoscale {
 
         /// Reads the code and message of an S3 XML error body.
         init(statusCode: Int, body: Data) {
-            let text = String(decoding: body, as: UTF8.self)
+            let text = String(bytes: body, encoding: .utf8) ?? ""
             func element(_ name: String) -> String? {
                 guard let start = text.range(of: "<\(name)>"),
                       let end = text.range(of: "</\(name)>", range: start.upperBound ..< text.endIndex)

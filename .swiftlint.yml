@@ -22,6 +22,7 @@ identifier_name:
     - mx
     - ns
     - pg
+    - s3
     - to
 
 # Models live in the Exoscale namespace, so a model's nested types and coding keys sit two or three
