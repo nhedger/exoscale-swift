@@ -14,6 +14,7 @@ public final class Exoscale: Sendable {
     public let configuration: Configuration
 
     let client: HTTPClient
+    let s3: S3Client
 
     /// Creates a client from a configuration.
     ///
@@ -25,6 +26,7 @@ public final class Exoscale: Sendable {
     public init(configuration: Configuration, sessionConfiguration: URLSessionConfiguration = .default) throws {
         self.configuration = configuration
         client = try HTTPClient(configuration: configuration, sessionConfiguration: sessionConfiguration)
+        s3 = try S3Client(configuration: configuration, sessionConfiguration: sessionConfiguration)
     }
 
     /// Creates a client from explicit credentials.
@@ -130,7 +132,7 @@ public final class Exoscale: Sendable {
 
     /// Simple Object Storage (SOS) buckets.
     public var objectStorage: ObjectStorage {
-        ObjectStorage(client: client)
+        ObjectStorage(client: client, s3: s3)
     }
 
     /// The organization, its balance and its usage.

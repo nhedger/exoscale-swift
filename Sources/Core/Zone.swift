@@ -32,6 +32,13 @@ public extension Exoscale {
             return URL(string: "https://api-\(rawValue).exoscale.com/v2")
         }
 
+        /// The base URL of Simple Object Storage's S3-compatible API, or `nil` when the
+        /// identifier can't be part of a hostname.
+        var sosEndpoint: URL? {
+            guard apiEndpoint != nil else { return nil }
+            return URL(string: "https://sos-\(rawValue).exo.io")
+        }
+
         /// Vienna 1.
         public static let atVie1: Zone = "at-vie-1"
         /// Vienna 2.

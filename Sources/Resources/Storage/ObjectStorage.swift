@@ -30,6 +30,21 @@ public extension Exoscale {
     /// Simple Object Storage (SOS). Objects themselves are managed with S3-compatible tools.
     struct ObjectStorage: Sendable {
         let client: HTTPClient
+        let s3: S3Client
+
+        /// Creates a private bucket in the client's zone.
+        ///
+        /// Bucket names are shared by every organization, so a taken name fails with an
+        /// ``S3Error`` whose code is `BucketAlreadyExists`.
+        public func createBucket(_ name: String) async throws {
+            try await s3.send(.put, bucket: name)
+        }
+
+        /// Deletes a bucket of the client's zone. Only an empty bucket can be deleted; one with
+        /// objects fails with an ``S3Error`` whose code is `BucketNotEmpty`.
+        public func deleteBucket(_ name: String) async throws {
+            try await s3.send(.delete, bucket: name)
+        }
 
         /// Lists the organization's buckets and the storage each uses.
         public func bucketUsage() async throws -> [BucketUsage] {
