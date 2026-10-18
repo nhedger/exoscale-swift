@@ -89,9 +89,13 @@ func emptiesBuckets() async throws {
         StubResponse(headers: xml, body: "<DeleteResult></DeleteResult>")
     )
 
-    let deleted = try await stub.exoscale.objectStorage.emptyBucket("assets")
+    let reported = Locked<[Int]>([])
+    let deleted = try await stub.exoscale.objectStorage.emptyBucket("assets") { count in
+        reported.withLock { $0.append(count) }
+    }
 
     #expect(deleted == 3)
+    #expect(reported.withLock(\.self) == [2, 3])
     let requests = stub.requests
     #expect(requests.map(\.httpMethod) == ["GET", "POST", "GET", "POST"])
     #expect(requests[0].url?.query == "max-keys=1000&versions=")

@@ -8,9 +8,11 @@ public extension Exoscale.ObjectStorage {
     /// Deletes every object of a bucket of the client's zone, with all their versions and delete
     /// markers, so the bucket can then be deleted. Objects are deleted 1,000 at a time.
     ///
+    /// - Parameter progress: Called after each batch with how many object versions and delete
+    ///   markers were deleted so far, to show progress on large buckets.
     /// - Returns: How many object versions and delete markers were deleted.
     @discardableResult
-    func emptyBucket(_ name: String) async throws -> Int {
+    func emptyBucket(_ name: String, progress: (@Sendable (Int) -> Void)? = nil) async throws -> Int {
         var deleted = 0
         // Each page lists what remains, since what was listed before is deleted.
         while true {
@@ -18,6 +20,7 @@ public extension Exoscale.ObjectStorage {
             if !page.versions.isEmpty {
                 try await deleteObjects(page.versions, from: name)
                 deleted += page.versions.count
+                progress?(deleted)
             }
             guard page.isTruncated else { return deleted }
         }
