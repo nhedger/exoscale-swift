@@ -127,3 +127,28 @@ func reportsUndeletedObjects() async throws {
     }
     #expect(error?.code == "AccessDenied")
 }
+
+@Test("Counts a bucket's objects across pages, up to a limit")
+func countsObjects() async throws {
+    let xml = ["Content-Type": "application/xml"]
+    let first = StubResponse(headers: xml, body: """
+    <ListBucketResult><IsTruncated>true</IsTruncated><NextContinuationToken>t+1/=</NextContinuationToken>
+    <Contents><Key>a</Key></Contents><Contents><Key>b</Key></Contents></ListBucketResult>
+    """)
+    let last = StubResponse(headers: xml, body: """
+    <ListBucketResult><IsTruncated>false</IsTruncated><Contents><Key>c</Key></Contents></ListBucketResult>
+    """)
+
+    let stub = try Stub(first, last)
+    let all = try await stub.exoscale.objectStorage.objectCount(in: "assets")
+    #expect(all.count == 3)
+    #expect(all.isComplete)
+    #expect(stub.requests.map(\.url?.query) == [
+        "list-type=2&max-keys=1000",
+        "continuation-token=t%2B1%2F%3D&list-type=2&max-keys=1000"
+    ])
+
+    let limited = try await Stub(first, last).exoscale.objectStorage.objectCount(in: "assets", limit: 2)
+    #expect(limited.count == 2)
+    #expect(!limited.isComplete)
+}
