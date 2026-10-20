@@ -7270,7 +7270,7 @@
             "description": "Instance Type"
           },
           "ip-forwarding": {
-            "description": "VPC ip forwarding",
+            "description": "Indicates if the instance can act as a router in a VPC network",
             "type": "boolean"
           },
           "ipv6-address": {
@@ -26358,7 +26358,7 @@
                     "description": "Instance Type"
                   },
                   "ip-forwarding": {
-                    "description": "VPC ip forwarding",
+                    "description": "Whether the instance can act as a router in a VPC network",
                     "type": "boolean"
                   },
                   "ipv6-enabled": {
