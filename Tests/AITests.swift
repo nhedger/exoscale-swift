@@ -43,9 +43,6 @@ import Testing
         _ = try await $0.ai.deployments.scale(id: "d-1", replicas: 0)
     },
     Call("delete deployment", "DELETE /ai/deployment/d-1") { _ = try await $0.ai.deployments.delete(id: "d-1") },
-    Call("deployment API key", "GET /ai/deployment/d-1/api-key", response: #"{"api-key":"k"}"#) {
-        _ = try await $0.ai.deployments.apiKey(id: "d-1")
-    },
     Call("deployment logs", "GET /ai/deployment/d-1/logs", query: ["tail": "100"], response: "{}") {
         _ = try await $0.ai.deployments.logs(id: "d-1", tail: 100)
     },

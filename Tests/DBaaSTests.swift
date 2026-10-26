@@ -218,9 +218,9 @@ func postgresCalls(_ call: Call) async throws {
     Call(
         "Thanos update",
         "PUT /dbaas-thanos/metrics",
-        body: #"{"thanos-settings":{"compactor":{"retention.days":30}}}"#
+        body: #"{"thanos-settings":{"compactor":{"retention-days":30}}}"#
     ) {
-        _ = try await $0.dbaas.thanos.update(name: "metrics", thanosSettings: ["compactor": ["retention.days": 30]])
+        _ = try await $0.dbaas.thanos.update(name: "metrics", thanosSettings: ["compactor": ["retention-days": 30]])
     },
     Call("Thanos reveal", "GET /dbaas-thanos/metrics/user/avnadmin/password/reveal", response: "{}") {
         _ = try await $0.dbaas.thanos.revealPassword(of: "avnadmin", in: "metrics")

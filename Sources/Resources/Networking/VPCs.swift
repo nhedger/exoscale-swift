@@ -1,5 +1,5 @@
 public extension Exoscale {
-    /// Virtual private clouds: routed private networks for instances (beta).
+    /// Virtual private clouds: routed private networks for instances.
     struct VPCs: Sendable {
         let client: HTTPClient
 
@@ -62,7 +62,7 @@ public extension Exoscale {
         }
     }
 
-    /// The subnets of one VPC (beta).
+    /// The subnets of one VPC.
     struct VPCSubnets: Sendable {
         let client: HTTPClient
         /// The VPC's identifier.
