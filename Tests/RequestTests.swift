@@ -1,9 +1,9 @@
 @testable import Exoscale
 import Foundation
+import Testing
 #if canImport(FoundationNetworking)
     import FoundationNetworking
 #endif
-import Testing
 
 private func client() throws -> HTTPClient {
     try Exoscale(apiKey: "EXOkey", apiSecret: "secret").client

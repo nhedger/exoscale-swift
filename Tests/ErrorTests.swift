@@ -1,9 +1,9 @@
 @testable import Exoscale
 import Foundation
+import Testing
 #if canImport(FoundationNetworking)
     import FoundationNetworking
 #endif
-import Testing
 
 @Test("Unsuccessful responses throw APIError with the API's message", arguments: [
     (#"{"message":"Instance not found"}"#, "Instance not found"),
