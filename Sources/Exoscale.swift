@@ -195,7 +195,7 @@ public final class Exoscale: Sendable {
         Users(client: client)
     }
 
-    /// Virtual private clouds: routed private networks for instances (beta).
+    /// Virtual private clouds: routed private networks for instances.
     public var vpcs: VPCs {
         VPCs(client: client)
     }

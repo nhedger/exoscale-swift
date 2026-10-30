@@ -101,7 +101,8 @@ public extension Exoscale {
         ///   - gpuType: The GPU family, from ``AI/instanceTypes()``.
         ///   - gpuCount: The number of GPUs per replica.
         ///   - replicas: The number of replicas.
-        ///   - productName: The product to bill the deployment as.
+        ///   - productName: The product to bill the deployment as, such as `my-product`: up to 256
+        ///     lowercase letters and digits, in words joined by single hyphens.
         ///   - inferenceEngineVersion: The inference engine's version.
         ///   - inferenceEngineParameters: Extra command-line parameters for the inference engine.
         public func create(
@@ -148,11 +149,6 @@ public extension Exoscale {
         /// Deletes a deployment.
         public func delete(id: String) async throws -> Operation {
             try await client.send(.delete, "/ai/deployment/\(id)")
-        }
-
-        /// Retrieves the API key of a deployment.
-        public func apiKey(id: String) async throws -> String {
-            try await client.send(.get, "/ai/deployment/\(id)/api-key", as: DeploymentAPIKey.self).apiKey
         }
 
         /// Retrieves the latest log lines of a deployment.
@@ -236,13 +232,5 @@ private struct InferenceQuota: Decodable {
 
     enum CodingKeys: String, CodingKey {
         case perMinute = "quota-uom-per-minute"
-    }
-}
-
-private struct DeploymentAPIKey: Decodable {
-    let apiKey: String
-
-    enum CodingKeys: String, CodingKey {
-        case apiKey = "api-key"
     }
 }
