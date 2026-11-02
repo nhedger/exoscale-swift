@@ -232,7 +232,8 @@ public extension Exoscale {
         ///
         /// - Parameters:
         ///   - name: The key store's name.
-        ///   - endpoint: The URL of the proxy Exoscale reaches the key store through.
+        ///   - endpoint: The URL of the proxy Exoscale reaches the key store through. Its host must
+        ///     resolve to a public IP address.
         ///   - credentials: The credentials Exoscale authenticates to the proxy with.
         ///   - description: The key store's description.
         /// - Returns: The new key store.

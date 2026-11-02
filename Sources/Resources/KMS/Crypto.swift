@@ -201,6 +201,12 @@ public extension Exoscale.Crypto {
         public static let rsassaPSSSHA384 = SigningAlgorithm(rawValue: "RSASSA_PSS_SHA_384")
         /// RSA-PSS with SHA-512.
         public static let rsassaPSSSHA512 = SigningAlgorithm(rawValue: "RSASSA_PSS_SHA_512")
+        /// RSA PKCS #1 v1.5 with SHA-256.
+        public static let rsassaPKCS1v15SHA256 = SigningAlgorithm(rawValue: "RSASSA_PKCS1_V1_5_SHA_256")
+        /// RSA PKCS #1 v1.5 with SHA-384.
+        public static let rsassaPKCS1v15SHA384 = SigningAlgorithm(rawValue: "RSASSA_PKCS1_V1_5_SHA_384")
+        /// RSA PKCS #1 v1.5 with SHA-512.
+        public static let rsassaPKCS1v15SHA512 = SigningAlgorithm(rawValue: "RSASSA_PKCS1_V1_5_SHA_512")
         /// ECDSA with SHA-256.
         public static let ecdsaSHA256 = SigningAlgorithm(rawValue: "ECDSA_SHA_256")
         /// ECDSA with SHA-384.

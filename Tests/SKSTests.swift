@@ -39,10 +39,16 @@ private let kubeconfigResponse = #"{"kubeconfig":"\#(Data(kubeconfig.utf8).base6
     Call(
         "kubeconfig",
         "POST /sks-cluster-kubeconfig/c-1",
-        body: #"{"groups":["system:masters"],"ttl":3600,"user":"admin"}"#,
+        body: #"{"groups":["system:masters"],"name":"prod","ttl":3600,"user":"admin"}"#,
         response: kubeconfigResponse
     ) {
-        _ = try await $0.sksClusters.kubeconfig(id: "c-1", user: "admin", groups: ["system:masters"], ttl: 3600)
+        _ = try await $0.sksClusters.kubeconfig(
+            id: "c-1",
+            user: "admin",
+            groups: ["system:masters"],
+            ttl: 3600,
+            name: "prod"
+        )
     },
     Call("certificate", "GET /sks-cluster/c-1/authority/control-plane/cert", response: #"{"cacert":"Q0VSVA=="}"#) {
         _ = try await $0.sksClusters.certificate(of: .controlPlane, cluster: "c-1")
@@ -81,6 +87,12 @@ private let kubeconfigResponse = #"{"kubeconfig":"\#(Data(kubeconfig.utf8).base6
     },
     Call("active template", "GET /sks-template/1.34.1/nvidia", response: #"{"active-template":"tpl-1"}"#) {
         _ = try await $0.sksClusters.activeTemplate(kubernetesVersion: "1.34.1", variant: .nvidia)
+    },
+    Call("templates", "GET /sks-template/1.34", response: "{}") {
+        _ = try await $0.sksClusters.templates(kubernetesVersion: "1.34")
+    },
+    Call("templates of a variant", "GET /sks-template/1.34.1", query: ["variant": "nvidia"], response: "{}") {
+        _ = try await $0.sksClusters.templates(kubernetesVersion: "1.34.1", variant: .nvidia)
     }
 ])
 func sksClusterCalls(_ call: Call) async throws {
@@ -94,8 +106,8 @@ func sksClusterCalls(_ call: Call) async throws {
     Call(
         "create",
         "POST /sks-cluster/c-1/nodepool",
-        body: #"{"disk-size":50,"instance-type":{"id":"type-1"},"kubelet-max-pods":200,"name":"workers","size":3,"#
-            + #""taints":{"gpu":{"effect":"NoSchedule","value":"true"}}}"#
+        body: #"{"disk-size":50,"instance-type":{"id":"type-1"},"kubelet-max-pods":200,"name":"workers","#
+            + #""nvidia-dra-driver":true,"size":3,"taints":{"gpu":{"effect":"NoSchedule","value":"true"}}}"#
     ) {
         _ = try await $0.sksClusters.nodepools(in: "c-1").create(
             name: "workers",
@@ -103,18 +115,27 @@ func sksClusterCalls(_ call: Call) async throws {
             instanceTypeID: "type-1",
             diskSize: 50,
             taints: ["gpu": .init(value: "true", effect: .noSchedule)],
-            kubeletMaxPods: 200
+            kubeletMaxPods: 200,
+            nvidiaDRADriver: true
         )
     },
     Call(
         "update",
         "PUT /sks-cluster/c-1/nodepool/np-1",
-        body: #"{"cpu-manager-config":{"cpu-manager-policy":"static","kube-reserved":{"cpu":"200m"}}}"#
+        body: #"{"cpu-manager-config":{"cpu-manager-policy":"static","kube-reserved":{"cpu":"200m"}},"#
+            + #""nvidia-dra-driver":false}"#
     ) {
         _ = try await $0.sksClusters.nodepools(in: "c-1").update(
             id: "np-1",
-            cpuManagerConfig: .init(policy: .static, kubeReserved: .init(cpu: "200m"))
+            cpuManagerConfig: .init(policy: .static, kubeReserved: .init(cpu: "200m")),
+            nvidiaDRADriver: false
         )
+    },
+    Call("set template", "PUT /sks-cluster/c-1/nodepool/np-1:set-template", body: #"{"template":{"id":"tpl-1"}}"#) {
+        _ = try await $0.sksClusters.nodepools(in: "c-1").setTemplate("tpl-1", for: "np-1")
+    },
+    Call("follow latest template", "PUT /sks-cluster/c-1/nodepool/np-1:set-template", body: #"{"template":null}"#) {
+        _ = try await $0.sksClusters.nodepools(in: "c-1").setTemplate(nil, for: "np-1")
     },
     Call("scale", "PUT /sks-cluster/c-1/nodepool/np-1:scale", body: #"{"size":5}"#) {
         _ = try await $0.sksClusters.nodepools(in: "c-1").scale(id: "np-1", size: 5)
@@ -141,6 +162,24 @@ func base64Responses() async throws {
     }
 }
 
+@Test("SKS node pool templates decode")
+func decodeSKSNodepoolTemplates() async throws {
+    let templates = try await decode(
+        #"{"sks-nodepool-templates":[{"id":"tpl-2","name":"SKS 1.34.2 (nvidia)","variant":"nvidia","#
+            + #""created-at":"2026-10-01T08:30:00Z"},{"id":"tpl-1"}]}"#,
+        from: "/sks-template/1.34"
+    ) { try await $0.sksClusters.templates(kubernetesVersion: "1.34") }
+    #expect(templates == [
+        .init(
+            id: "tpl-2",
+            name: "SKS 1.34.2 (nvidia)",
+            variant: .nvidia,
+            createdAt: Date(timeIntervalSince1970: 1_790_843_400)
+        ),
+        .init(id: "tpl-1")
+    ])
+}
+
 @Test("SKS clusters decode with their node pools")
 func decodeSKSClusters() async throws {
     let cluster = try await decode(
@@ -151,7 +190,7 @@ func decodeSKSClusters() async throws {
             + #""instance-pool":{"id":"pool-1"},"#
             + #""taints":{"gpu":{"value":"true","effect":"NoExecute"}},"addons":["storage-lvm"],"#
             + #""kubelet-image-gc":{"high-threshold":85,"low-threshold":80,"min-age":"2m"},"#
-            + #""nvidia-mig-profiles":{"a30.24gb":"1g.6gb"}}]}"#,
+            + #""nvidia-dra-driver":true,"nvidia-mig-profiles":{"a30.24gb":"1g.6gb"}}]}"#,
         from: "/sks-cluster/c-1"
     ) { try await $0.sksClusters.get(id: "c-1") }
     #expect(cluster == .init(
@@ -174,6 +213,7 @@ func decodeSKSClusters() async throws {
             taints: ["gpu": .init(value: "true", effect: .noExecute)],
             addons: [.storageLVM],
             kubeletImageGC: .init(highThreshold: 85, lowThreshold: 80, minAge: "2m"),
+            nvidiaDRADriver: true,
             nvidiaMIGProfiles: ["a30.24gb": "1g.6gb"]
         )]
     ))

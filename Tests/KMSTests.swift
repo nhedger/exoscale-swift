@@ -101,6 +101,14 @@ func kmsKeyCalls(_ call: Call) async throws {
         _ = try await $0.crypto.sign(secret, with: "k-1", algorithm: .ecdsaSHA256, messageType: .raw)
     },
     Call(
+        "sign with PKCS #1 v1.5",
+        "POST /kms-key/k-1/sign",
+        body: #"{"message":"c2VjcmV0","signing-algorithm":"RSASSA_PKCS1_V1_5_SHA_256"}"#,
+        response: #"{"signature":"AAEC"}"#
+    ) {
+        _ = try await $0.crypto.sign(secret, with: "k-1", algorithm: .rsassaPKCS1v15SHA256)
+    },
+    Call(
         "verify",
         "POST /kms-key/k-1/verify",
         body: #"{"message":"c2VjcmV0","signature":"AAEC","signing-algorithm":"EDDSA_ED25519"}"#,

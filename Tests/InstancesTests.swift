@@ -227,6 +227,17 @@ func unknownValues() async throws {
     #expect(instance.publicIPAssignment?.rawValue == "ipv6-only")
 }
 
+@Test("Rebooting and resetting states decode", arguments: [
+    ("rebooting", Exoscale.Instance.State.rebooting),
+    ("resetting", Exoscale.Instance.State.resetting)
+])
+func transitionalStates(rawValue: String, state: Exoscale.Instance.State) async throws {
+    let instance = try await decode(#"{"id":"i-1","state":"\#(rawValue)"}"#, from: "/instance/i-1") {
+        try await $0.instances.get(id: "i-1")
+    }
+    #expect(instance.state == state)
+}
+
 @Test("Timestamps decode with or without fractional seconds")
 func fractionalTimestamps() async throws {
     let stub = try Stub(json: #"{"instances":[{"id":"i-1","created-at":"2026-10-01T08:30:00.5Z"}]}"#)
