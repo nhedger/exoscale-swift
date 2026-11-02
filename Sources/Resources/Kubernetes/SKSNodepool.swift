@@ -47,6 +47,8 @@ public extension Exoscale {
         public let kubeletMaxPods: Int?
         /// How the kubelet assigns CPUs to pods.
         public let cpuManagerConfig: CPUManagerConfig?
+        /// Whether the GPUs are exposed with the NVIDIA DRA driver rather than the NVIDIA device plugin.
+        public let nvidiaDRADriver: Bool?
         /// The NVIDIA Multi-Instance GPU profile of each GPU model, keyed by model such as `a30.24gb`.
         public let nvidiaMIGProfiles: [String: String]?
         /// When the node pool was created.
@@ -76,6 +78,7 @@ public extension Exoscale {
             kubeletImageGC: KubeletImageGC? = nil,
             kubeletMaxPods: Int? = nil,
             cpuManagerConfig: CPUManagerConfig? = nil,
+            nvidiaDRADriver: Bool? = nil,
             nvidiaMIGProfiles: [String: String]? = nil,
             createdAt: Date? = nil
         ) {
@@ -101,6 +104,7 @@ public extension Exoscale {
             self.kubeletImageGC = kubeletImageGC
             self.kubeletMaxPods = kubeletMaxPods
             self.cpuManagerConfig = cpuManagerConfig
+            self.nvidiaDRADriver = nvidiaDRADriver
             self.nvidiaMIGProfiles = nvidiaMIGProfiles
             self.createdAt = createdAt
         }
@@ -119,6 +123,7 @@ public extension Exoscale {
             case kubeletImageGC = "kubelet-image-gc"
             case kubeletMaxPods = "kubelet-max-pods"
             case cpuManagerConfig = "cpu-manager-config"
+            case nvidiaDRADriver = "nvidia-dra-driver"
             case nvidiaMIGProfiles = "nvidia-mig-profiles"
             case createdAt = "created-at"
         }

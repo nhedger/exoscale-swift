@@ -138,12 +138,19 @@ public extension Exoscale {
         ///   - user: The user name, also the client certificate's common name.
         ///   - groups: The groups, also the client certificate's organizations, such as `system:masters`.
         ///   - ttl: How long the client certificate stays valid, in seconds. The API defaults to 30 days.
+        ///   - name: The cluster and context name in the file. The API defaults to the cluster's identifier.
         /// - Returns: The kubeconfig file's contents.
-        public func kubeconfig(id: String, user: String, groups: [String], ttl: Int? = nil) async throws -> String {
+        public func kubeconfig(
+            id: String,
+            user: String,
+            groups: [String],
+            ttl: Int? = nil,
+            name: String? = nil
+        ) async throws -> String {
             let response = try await client.send(
                 .post,
                 "/sks-cluster-kubeconfig/\(id)",
-                body: ["user": user, "groups": groups, "ttl": ttl] as JSONBody,
+                body: ["user": user, "groups": groups, "ttl": ttl, "name": name] as JSONBody,
                 as: Kubeconfig.self
             )
             return try decodeBase64(response.kubeconfig)
@@ -241,6 +248,23 @@ public extension Exoscale {
                 throw ClientError.invalidResponse
             }
             return template
+        }
+
+        /// Lists the templates node pools of a Kubernetes version can use, latest first.
+        ///
+        /// - Parameters:
+        ///   - kubernetesVersion: The Kubernetes version, as major.minor or major.minor.patch.
+        ///   - variant: Standard nodes or NVIDIA GPU nodes, or `nil` for both.
+        public func templates(
+            kubernetesVersion: String,
+            variant: SKSNodepool.TemplateVariant? = nil
+        ) async throws -> [SKSNodepoolTemplate] {
+            try await client.send(
+                .get,
+                "/sks-template/\(kubernetesVersion)",
+                query: ["variant": variant?.rawValue],
+                unwrapping: "sks-nodepool-templates"
+            )
         }
 
         // MARK: Node pools

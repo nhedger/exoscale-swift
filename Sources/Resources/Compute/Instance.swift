@@ -164,6 +164,10 @@ public extension Exoscale.Instance {
         public static let stopping = State(rawValue: "stopping")
         /// The instance is stopped.
         public static let stopped = State(rawValue: "stopped")
+        /// The instance is rebooting.
+        public static let rebooting = State(rawValue: "rebooting")
+        /// The instance is being reset to its template.
+        public static let resetting = State(rawValue: "resetting")
         /// The instance is moving to another hypervisor.
         public static let migrating = State(rawValue: "migrating")
         /// The instance is being deleted.

@@ -30,6 +30,8 @@ public extension Exoscale {
         ///   - kubeletImageGC: When the kubelet removes unused images.
         ///   - kubeletMaxPods: The maximum number of pods per node.
         ///   - cpuManagerConfig: How the kubelet assigns CPUs to pods.
+        ///   - nvidiaDRADriver: Whether to expose the GPUs with the NVIDIA DRA driver rather than the NVIDIA
+        ///     device plugin. Requires a GPU instance type and Kubernetes 1.34 or later.
         ///   - nvidiaMIGProfiles: The NVIDIA Multi-Instance GPU profile of each GPU model.
         public func create(
             name: String,
@@ -49,6 +51,7 @@ public extension Exoscale {
             kubeletImageGC: SKSNodepool.KubeletImageGC? = nil,
             kubeletMaxPods: Int? = nil,
             cpuManagerConfig: SKSNodepool.CPUManagerConfig? = nil,
+            nvidiaDRADriver: Bool? = nil,
             nvidiaMIGProfiles: [String: String]? = nil
         ) async throws -> Operation {
             try await client.send(.post, "/sks-cluster/\(clusterID)/nodepool", body: [
@@ -69,6 +72,7 @@ public extension Exoscale {
                 "kubelet-image-gc": kubeletImageGC,
                 "kubelet-max-pods": kubeletMaxPods,
                 "cpu-manager-config": cpuManagerConfig,
+                "nvidia-dra-driver": nvidiaDRADriver,
                 "nvidia-mig-profiles": nvidiaMIGProfiles
             ] as JSONBody)
         }
@@ -92,6 +96,7 @@ public extension Exoscale {
             kubeletImageGC: SKSNodepool.KubeletImageGC? = nil,
             kubeletMaxPods: Int? = nil,
             cpuManagerConfig: SKSNodepool.CPUManagerConfig? = nil,
+            nvidiaDRADriver: Bool? = nil,
             nvidiaMIGProfiles: [String: String]? = nil
         ) async throws -> Operation {
             try await client.send(.put, "/sks-cluster/\(clusterID)/nodepool/\(id)", body: [
@@ -110,6 +115,7 @@ public extension Exoscale {
                 "kubelet-image-gc": kubeletImageGC,
                 "kubelet-max-pods": kubeletMaxPods,
                 "cpu-manager-config": cpuManagerConfig,
+                "nvidia-dra-driver": nvidiaDRADriver,
                 "nvidia-mig-profiles": nvidiaMIGProfiles
             ] as JSONBody)
         }
@@ -132,6 +138,21 @@ public extension Exoscale {
             )
         }
 
+        /// Sets the template a node pool's nodes are created from.
+        ///
+        /// - Parameters:
+        ///   - templateID: A template from ``SKSClusters/templates(kubernetesVersion:variant:)`` for the
+        ///     node pool's Kubernetes version and variant, or `nil` to follow the latest one.
+        ///   - id: The node pool's identifier.
+        public func setTemplate(_ templateID: String?, for id: String) async throws -> Operation {
+            let template: any Encodable & Sendable = templateID.map { ["id": $0] } ?? JSONValue.null
+            return try await client.send(
+                .put,
+                "/sks-cluster/\(clusterID)/nodepool/\(id):set-template",
+                body: ["template": template] as JSONBody
+            )
+        }
+
         /// Deletes a node pool and its nodes.
         public func delete(id: String) async throws -> Operation {
             try await client.send(.delete, "/sks-cluster/\(clusterID)/nodepool/\(id)")
@@ -141,7 +162,7 @@ public extension Exoscale {
 
 public extension Exoscale.SKSNodepool {
     /// The kind of nodes a template is for.
-    struct TemplateVariant: RawRepresentable, Hashable, Sendable {
+    struct TemplateVariant: RawRepresentable, Hashable, Codable, Sendable {
         /// The variant as the API names it.
         public let rawValue: String
 
